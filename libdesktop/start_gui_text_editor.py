@@ -59,24 +59,24 @@ def start_gui_text_editor(file=''):
 
 			editor_cmd_str = editor_cmd_str.split('\n')[0]
 
-		if '.desktop' in editor_cmd_str:
+	if '.desktop' in editor_cmd_str:
 
-			if file:
+		if file:
 
-				file = 'file://' + file
+			file = 'file://' + file
 
-				linux_exec_desktop_file(editor_cmd_str, file)
-
-			else:
-
-				linux_exec_desktop_file(editor_cmd_str)
+			linux_exec_desktop_file(editor_cmd_str, file)
 
 		else:
 
-			if file:
+			linux_exec_desktop_file(editor_cmd_str)
 
-				sp.Popen([editor_cmd_str, file], shell=True)
+	else:
 
-			else:
+		if file:
 
-				sp.Popen([editor_cmd_str], shell=True)
+			sp.Popen([editor_cmd_str, file], shell=True)
+
+		else:
+
+			sp.Popen([editor_cmd_str], shell=True)

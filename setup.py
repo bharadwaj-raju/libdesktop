@@ -2,7 +2,7 @@ from distutils.core import setup
 setup(
   name = 'libdesktop',
   packages = ['libdesktop'],
-  version = '1.5',
+  version = '2.0',
   description = 'A cross-platform library for miscellaneous OS functions and conveniences.',
   author = 'Bharadwaj Raju',
   author_email = 'bharadwaj.raju777@gmail.com',

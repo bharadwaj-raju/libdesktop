@@ -13,7 +13,7 @@ import os
 from .get_desktop_environment import get_desktop_environment
 from .is_in_path import is_in_path
 
-def start_terminal_emulator(background=False, exec_cmd='', shell_after_cmd_exec=False):
+def start_terminal_emulator(background=False, exec_cmd='', shell_after_cmd_exec=False, return_cmd=False):
 
 	desktop_env = get_desktop_environment()
 
@@ -163,5 +163,9 @@ def start_terminal_emulator(background=False, exec_cmd='', shell_after_cmd_exec=
 		if not desktop_env == 'windows':
 
 			sp.Popen(['chmod +x %s' % exec_cmd_script_file], shell=True)
+
+	if return_cmd:
+
+		return terminal_cmd_str
 
 	sp.Popen([terminal_cmd_str], shell=True)
