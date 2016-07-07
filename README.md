@@ -14,7 +14,7 @@ Install:
 $ pip install libdesktop
 ```
 
-You may need to prefix it with `sudo -H` if you get a permissions error.
+You may need to use `sudo -H`.
 
 Simply:
 
