@@ -29,10 +29,13 @@ and call functions. See [documentation](#documentation)
 - [`add_to_system_startup()`](#add_to_system_startup)
 - [`start_terminal_emulator()`](#start_terminal_emulator)
 - [`start_gui_text_editor()`](#start_gui_text_editor)
+- [`open_file_with_default_program()`](#open_file_with_default_program)
 - [`get_desktop_environment()`](#get_desktop_environment)
 - [`set_desktop_wallpaper()`](#set_desktop_wallpaper)
 - [`linux_exec_desktop_file()`](#linux_exec_desktop_file)
 - [`linux_create_desktop_file()`](#linux_create_desktop_file)
+- [`restart_program()`](#restart_program)
+- [`is_in_path`](#is_in_path)
 - [`is_running()`](#is_running)
 - [`get_config_dir()`](#get_config_dir)
 
@@ -60,7 +63,7 @@ Starts a suitable Terminal based on user's OS and desktop environment.
 - If `shell_after_cmd_exec` is `True`, user's default shell is started after running `exec_cmd`
 - If `return_cmd` is `True`, Terminal is not started, but command to start is returned, for further use or modification.
 
-*NOTE:* some terminal emulators exit immediately after running command (`exec_cmd`). You might want to use `read` (bash) or `pause` (DOS) to keep it open.
+*NOTE:* some terminal emulators exit immediately after running command (`exec_cmd`). You might want to use `read` (\*nix) or `pause` (DOS) to keep it open.
 
 Returns: `str` if `return_cmd`, otherwise nothing
 
@@ -72,6 +75,16 @@ libdesktop.start_gui_text_editor(file='')
 
 Start the user's default plain-text editor.
 Optionally launch to edit `file`(s), which should be a `str` of a full path to text file(s).
+
+Returns: nothing
+
+## `open_file_with_default_program()`
+
+```python
+libdesktop.open_file_with_default_program(file)
+```
+
+Opens `file` (should be a `str` of full path to file) with the default program for it.
 
 Returns: nothing
 
@@ -109,7 +122,9 @@ For example,
 libdesktop.linux_exec_desktop_file('/usr/share/applications/org.gnome.gedit.desktop', 'file1', 'file2')
 ```
 
-will open Gedit (GNOME editor) with `file1` and `file2` open (these are specifed as URIs). Note that these must be full paths.
+will open Gedit (GNOME editor) with `file1` and `file2` open (these are specified as URIs). Note that these must be full paths.
+
+Returns: nothing
 
 *NOTE:* As implied by the name, this works *only* on Linux, since the concept of `.desktop` files to specify apps is only on Linux desktop environments.
 
@@ -127,7 +142,7 @@ The new `.desktop` file's
 - `Exec` parameter will be `execute`
 - `Terminal` parameter will be based on if `terminal` is `True` or `False`.
 
-Additional options can be specifed as lists in the form:
+Additional options can be specified as lists in the form:
 
 ```python
 additional_opts = ['GenericName=Something', 'Version=3.0']
@@ -135,9 +150,34 @@ additional_opts = ['GenericName=Something', 'Version=3.0']
 
 etc.
 
-By default it will write the resulting `.desktop` into specifed `filename`, but if `return_str` is `True`, will return resulting `.desktop` as a `str`
+By default it will write the resulting `.desktop` into specified `filename`, but if `return_str` is `True`, will return resulting `.desktop` as a `str`.
+
+Returns: `str` if `return_str` is `True`, otherwise nothing.
 
 *NOTE:* As implied by the name, the result works *only* on Linux, since the concept of `.desktop` files to specify apps is only on Linux desktop environments.
+
+## `restart_program()`
+
+```python
+libdesktop.restart_program(additional_args=None, remove_args=None)
+```
+Restart current process/script and
+
+- If `additional_args` list is specified, restart, with additional arguments. `additional_args` must be such: `additional_args=['--option', 'option2']` etc.
+
+- If `remove_args` list is specified, restart, with removed arguments. `remove_args` must be such: `remove_args=['--option', 'option2']` etc.
+
+Returns: nothing
+
+## `is_in_path()`
+
+```python
+libdesktop.is_in_path(program)
+```
+
+If `program` is in the system's `PATH`, returns `True`, else `False`.
+
+Returns: `bool`
 
 ## `is_running()`
 

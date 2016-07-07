@@ -106,55 +106,90 @@ def start_terminal_emulator(background=False, exec_cmd='', shell_after_cmd_exec=
 
 	# Process the terminal_cmd_str
 
-	if exec_cmd:
-
-		if shell_after_cmd_exec:
-
-			exec_cmd += ' ; ' + os.getenv('SHELL')
-
-	if desktop_env == 'windows':
-
-		if background:
-
-			terminal_cmd_str = terminal_cmd_str.replace('start', 'start /B', 1)
-
-	else:
-
-		if exec_cmd:
-
-			if desktop_env == 'mac':
-
-				terminal_cmd_str += ' ' + exec_cmd_script_file
-
-			else:
-
-				# Linux/Unix
-				# Most Terminals on Linux/Unix use -e 'command to execute'
-
-				terminal_cmd_str += ' -e ' + '\'' + exec_cmd + '\''
-
-		if background:
-
-			terminal_cmd_str += ' &'
+	# if exec_cmd:
+	#
+	# 	if shell_after_cmd_exec:
+	#
+	# 		exec_cmd += ' ; ' + os.getenv('SHELL')
+	#
+	# if desktop_env == 'windows':
+	#
+	# 	if background:
+	#
+	# 		terminal_cmd_str = terminal_cmd_str.replace('start', 'start /B', 1)
+	#
+	# else:
+	#
+	# 	if exec_cmd:
+	#
+	# 		if desktop_env == 'mac':
+	#
+	# 			terminal_cmd_str += ' ' + exec_cmd
+	#
+	# 		else:
+	#
+	# 			# Linux/Unix
+	# 			# Most Terminals on Linux/Unix use -e 'command to execute'
+	#
+	# 			terminal_cmd_str += ' -e ' + '\'' + exec_cmd + '\''
+	#
+	# 	if background:
+	#
+	# 		terminal_cmd_str += ' &'
+	#
+	# if exec_cmd:
+	#
+	# 	if desktop_env == 'windows':
+	#
+	# 		exec_cmd_script_file += '.ps1'
+	#
+	# 	if shell_after_cmd_exec:
+	#
+	# 		if desktop_env == 'windows':
+	#
+	# 			terminal_cmd_str = terminal_cmd_str.replace('powershell.exe', 'powershell.exe -noexit')
+	#
+	# 	if not desktop_env == 'windows':
+	#
+	# 		sp.Popen(['chmod +x %s' % exec_cmd_script_file], shell=True)
 
 	if exec_cmd:
 
 		if desktop_env == 'windows':
 
-			exec_cmd_script_file += '.ps1'
+			if os.path.isfile(exec_cmd):
 
-		if shell_after_cmd_exec:
+				terminal_cmd_str += exec_cmd
 
-			if desktop_env == 'windows':
+			else:
 
-				terminal_cmd_str = terminal_cmd_str.replace('powershell.exe', 'powershell.exe -noexit')
+				terminal_cmd_str += ' -Command ' + '"' + exec_cmd + '"'
 
-		if not desktop_env == 'windows':
+			if shell_after_cmd_exec:
 
-			sp.Popen(['chmod +x %s' % exec_cmd_script_file], shell=True)
+				terminal_cmd_str += ' -NoExit'
+
+		else:
+
+			if shell_after_cmd_exec:
+
+				exec_cmd += ' ; ' + os.getenv('SHELL')
+
+			if desktop_env == 'mac':
+
+				terminal_cmd_str += ' ' + 'sh -c ' + '"' + exec_cmd + '"'
+
+			else:
+
+				terminal_cmd_str += ' -e ' + 'sh -c ' + '"' + exec_cmd + '"'
 
 	if return_cmd:
 
 		return terminal_cmd_str
 
-	sp.Popen([terminal_cmd_str], shell=True)
+	terminal_proc = sp.Popen([terminal_cmd_str], shell=True, stdout=sp.PIPE)
+
+	if not background:
+
+		# Wait for process to complete
+		terminal_proc.wait()

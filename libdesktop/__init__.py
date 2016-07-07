@@ -9,3 +9,4 @@ from .linux_exec_desktop_file import linux_exec_desktop_file
 from .start_gui_text_editor import start_gui_text_editor
 from .add_to_system_startup import add_to_system_startup
 from .linux_create_desktop_file import linux_create_desktop_file
+from .open_file_with_default_program import open_file_with_default_program
