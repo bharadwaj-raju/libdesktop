@@ -14,6 +14,7 @@ import tempfile
 import shutil
 import configparser
 import traceback
+import ctypes
 from .get_desktop_environment import get_desktop_environment
 from .get_config_dir import get_config_dir
 
@@ -207,6 +208,12 @@ rundll32.exe user32.dll,UpdatePerUserSystemParameters
 					f.write(WIN_SCRIPT)
 
 				sp.Popen([win_script_file], shell=True)
+
+				# Sometimes the method above works
+				# and sometimes the one below
+
+				SPI_SETDESKWALLPAPER = 20
+				ctypes.windll.user32.SystemParametersInfoA(SPI_SETDESKWALLPAPER, 0, image , 0)
 
 		elif desktop_env == 'mac':
 
