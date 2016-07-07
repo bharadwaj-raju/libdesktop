@@ -60,6 +60,8 @@ Starts a suitable Terminal based on user's OS and desktop environment.
 - If `shell_after_cmd_exec` is `True`, user's default shell is started after running `exec_cmd`
 - If `return_cmd` is `True`, Terminal is not started, but command to start is returned, for further use or modification.
 
+*NOTE:* some terminal emulators exit immediately after running command (`exec_cmd`). You might want to use `read` (bash) or `pause` (DOS) to keep it open.
+
 Returns: `str` if `return_cmd`, otherwise nothing
 
 ## `start_gui_text_editor()`
@@ -134,6 +136,8 @@ additional_opts = ['GenericName=Something', 'Version=3.0']
 etc.
 
 By default it will write the resulting `.desktop` into specifed `filename`, but if `return_str` is `True`, will return resulting `.desktop` as a `str`
+
+*NOTE:* As implied by the name, the result works *only* on Linux, since the concept of `.desktop` files to specify apps is only on Linux desktop environments.
 
 ## `is_running()`
 

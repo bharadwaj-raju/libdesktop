@@ -34,11 +34,11 @@ def add_to_system_startup(command, name, all_users=False, run_in_terminal=False)
 
 		if all_users:
 
-			startup_dir = os.path.join(winreg.ExpandEnvironmentStrings('%PROGRAMDATA'), 'Microsoft\\Windows\\Start Menu\\Programs\\Startup')
+			startup_dir = os.path.join(winreg.ExpandEnvironmentStrings('%PROGRAMDATA%'), 'Microsoft\\Windows\\Start Menu\\Programs\\Startup')
 
 		else:
 
-			startup_dir = os.path.join(get_config_dir(), 'Roaming\\Microsoft\\Windows\\Start Menu\\Programs\\Startup)
+			startup_dir = os.path.join(get_config_dir(), 'Roaming\\Microsoft\\Windows\\Start Menu\\Programs\\Startup')
 
 		if not command_is_file:
 
@@ -61,11 +61,11 @@ def add_to_system_startup(command, name, all_users=False, run_in_terminal=False)
 
 		if all_users:
 
-			sp.Popen(['sudo launchctl submit -l name_of_startup_item -- %s'] command)
+			sp.Popen(['sudo launchctl submit -l name_of_startup_item -- %s'] % command, shell=True)
 
 		else:
 
-			sp.Popen(['launchctl submit -l name_of_startup_item -- %s'] command)
+			sp.Popen(['launchctl submit -l name_of_startup_item -- %s'] % command, shell=True)
 
 	else:
 

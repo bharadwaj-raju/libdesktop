@@ -7,3 +7,5 @@ from .set_desktop_wallpaper import set_desktop_wallpaper
 from .is_in_path import is_in_path
 from .linux_exec_desktop_file import linux_exec_desktop_file
 from .start_gui_text_editor import start_gui_text_editor
+from .add_to_system_startup import add_to_system_startup
+from .linux_create_desktop_file import linux_create_desktop_file

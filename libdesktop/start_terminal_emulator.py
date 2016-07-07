@@ -64,7 +64,7 @@ def start_terminal_emulator(background=False, exec_cmd='', shell_after_cmd_exec=
 
 			terminal_cmd_str = 'x-terminal-emulator'
 
-		if desktop_env in ['gnome', 'unity', 'cinnamon'] or desktop_env == 'gnome2':
+		elif desktop_env in ['gnome', 'unity', 'cinnamon'] or desktop_env == 'gnome2':
 
 			terminal_cmd_str = 'gnome-terminal'
 
@@ -108,7 +108,9 @@ def start_terminal_emulator(background=False, exec_cmd='', shell_after_cmd_exec=
 
 	if exec_cmd:
 
-		exec_cmd_script_file = os.path.join(tempfile.gettempdir(), 'exec_cmd_script')
+		if shell_after_cmd_exec:
+
+			exec_cmd += ' ; ' + os.getenv('SHELL')
 
 	if desktop_env == 'windows':
 
@@ -129,8 +131,7 @@ def start_terminal_emulator(background=False, exec_cmd='', shell_after_cmd_exec=
 				# Linux/Unix
 				# Most Terminals on Linux/Unix use -e 'command to execute'
 
-				terminal_cmd_str += ' -e ' + exec_cmd_script_file
-
+				terminal_cmd_str += ' -e ' + '\'' + exec_cmd + '\''
 
 		if background:
 
@@ -142,23 +143,11 @@ def start_terminal_emulator(background=False, exec_cmd='', shell_after_cmd_exec=
 
 			exec_cmd_script_file += '.ps1'
 
-		with open(exec_cmd_script_file, 'w') as f:
-
-			f.write(exec_cmd)
-
 		if shell_after_cmd_exec:
 
 			if desktop_env == 'windows':
 
 				terminal_cmd_str = terminal_cmd_str.replace('powershell.exe', 'powershell.exe -noexit')
-
-			else:
-
-				with open(exec_cmd_script_file, 'a') as f:
-
-					# Start user's shell after completion
-					f.write('\n' + os.getenv('SHELL'))
-
 
 		if not desktop_env == 'windows':
 
