@@ -12,10 +12,12 @@ License: MIT
 Install:
 
 ```bash
-$ pip install libdesktop
+$ pip3 install libdesktop
 ```
 
-You may need to use `sudo -H` with `pip`.
+You may need to use `sudo -H` with this.
+
+Windows and macOS users: replace `pip3` with `pip` or whatever the Python 3 `pip` is.
 
 Simply:
 
