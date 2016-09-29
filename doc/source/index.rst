@@ -1,0 +1,27 @@
+.. libdesktop documentation master file, created by
+   sphinx-quickstart on Thu Sep 29 10:28:39 2016.
+   You can adapt this file completely to your liking, but it should at least
+   contain the root `toctree` directive.
+
+libdesktop
+======================================
+
+OS and desktop integration made *easy*.
+
+libdesktop is a collection of modules and functions that make it easy to integrate into the OS, without worrying about its quirks.
+
+
+.. toctree::
+   :maxdepth: 10
+
+
+`The documentation! <libdesktop.html>`_
+
+
+Quick Links
+-----------
+
+* :ref:`genindex`
+* :ref:`modindex`
+* :ref:`search`
+
