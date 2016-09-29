@@ -12,9 +12,9 @@ import sys
 import plistlib
 import subprocess as sp
 import shutil
-from . import system
-from . import desktopfile
-from . import applications
+from libdesktop import system
+from libdesktop import desktopfile
+from libdesktop import applications
 
 def add_item(name, command, system_wide=False):
 

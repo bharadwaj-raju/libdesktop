@@ -11,8 +11,8 @@ import subprocess as sp
 import tempfile
 import os
 
-from . import desktopfile
-from . import system
+from libdesktop import desktopfile
+from libdesktop import system
 
 def mac_app_exists(app):
 

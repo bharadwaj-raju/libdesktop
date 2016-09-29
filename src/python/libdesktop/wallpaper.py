@@ -18,7 +18,7 @@ except ImportError:
 
 import traceback
 import ctypes
-from . import system
+from libdesktop import system
 import tempfile
 import shutil
 

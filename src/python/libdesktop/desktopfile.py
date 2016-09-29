@@ -8,7 +8,7 @@
 
 import os
 import subprocess as sp
-from . import applications
+from libdesktop import applications
 
 def construct(name, exec_, terminal=False, additional_opts={}):
 

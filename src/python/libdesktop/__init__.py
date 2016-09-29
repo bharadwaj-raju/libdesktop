@@ -3,7 +3,7 @@ import sys
 
 sys.path.insert(0, '.')
 
-from . import startup
-from . import desktopfile
-from . import system
-from . import applications
+from libdesktop import startup
+from libdesktop import desktopfile
+from libdesktop import system
+from libdesktop import applications
