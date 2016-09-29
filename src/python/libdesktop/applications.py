@@ -10,8 +10,14 @@
 import subprocess as sp
 import tempfile
 import os
-from . import desktopfile
-from . import system
+
+try:
+	from . import desktopfile
+	from . import system
+
+except ImportError:
+	import desktopfile
+	import system
 
 def mac_app_exists(app):
 
