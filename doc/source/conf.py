@@ -37,7 +37,8 @@ import os
 print(os.path.join(os.path.dirname(__name__), '..', 'src/python/'))
 
 sys.path.insert(0, os.path.join(os.path.dirname(__name__), '..', 'src/python/'))
-sys.path.insert(0, os.path.join(os.path.dirname(__name__), '..', '..', 'src/python/'))
+sys.path.insert(1, os.path.join(os.path.dirname(__name__), '..', '..', 'src/python/'))
+
 extensions = [
     'sphinx.ext.autodoc',
     'sphinx.ext.todo',
