@@ -8,20 +8,24 @@ libdesktop
 
 OS and desktop integration made *easy*.
 
-libdesktop is a collection of modules and functions that make it easy to integrate into the OS, without worrying about its quirks.
+libdesktop is a library that makes it easy to integrate into the OS, without worrying about its quirks.
+
+Supports Windows (7+), OS X and Linux/Unix.
 
 
-.. toctree::
-   :maxdepth: 10
-
-
-`The documentation! <libdesktop.html>`_
-
-
-Quick Links
------------
-
+* `A list of modules. <module-list.html>`_
 * :ref:`genindex`
 * :ref:`modindex`
 * :ref:`search`
+
+.. toctree::
+   :maxdepth: 10
+   :caption: Contents
+   List of modules <module-list>
+   libdesktop.applications <applications>
+   libdesktop.desktopfile <desktopfile>
+   libdesktop.system <system>
+   libdesktop.startup <startup>
+   libdesktop.wallpaper <wallpaper>
+
 
