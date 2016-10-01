@@ -18,10 +18,6 @@ from libdesktop import applications
 
 def add_item(name, command, system_wide=False):
 
-	''' Adds 'command' to system startup with a 'name' entry.
-	'system' does this system-wide (requires superuser privileges).
-	'''
-
 	'''Adds a program to startup.
 
 	Adds a program to user startup.
@@ -33,6 +29,7 @@ def add_item(name, command, system_wide=False):
 
 	Note:
 		`system_wide` requires superuser/admin privileges.
+
 	'''
 
 	desktop_env = system.get_name()
@@ -101,10 +98,12 @@ def list_items(system_wide=False):
 
 	Returns:
 		list: A list of dictionaries in this format:
+
 			.. code-block:: python
+
 				{
-					'name': 'The name of the entry.',
-					'command': 'The command used to run it.'
+				  'name': 'The name of the entry.',
+				  'command': 'The command used to run it.'
 				}
 	'''
 
