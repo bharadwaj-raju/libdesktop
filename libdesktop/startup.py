@@ -22,6 +22,19 @@ def add_item(name, command, system_wide=False):
 	'system' does this system-wide (requires superuser privileges).
 	'''
 
+	'''Adds a program to startup.
+
+	Adds a program to user startup.
+
+	Args:
+		name        (str) : The name of the startup entry.
+		command     (str) : The command to run.
+		system_wide (bool): Add to system-wide startup.
+
+	Note:
+		`system_wide` requires superuser/admin privileges.
+	'''
+
 	desktop_env = system.get_name()
 
 	if os.path.isfile(command):
@@ -79,8 +92,21 @@ def add_item(name, command, system_wide=False):
 
 def list_items(system_wide=False):
 
-	''' List all startup items.
-	'system' list system-wide startup items. '''
+	'''List startup programs.
+
+	List the programs set to run at startup.
+
+	Args:
+		system_wide (bool): Gets the programs that run at system-wide startup.
+
+	Returns:
+		list: A list of dictionaries in this format:
+			.. code-block:: python
+				{
+					'name': 'The name of the entry.',
+					'command': 'The command used to run it.'
+				}
+	'''
 
 	desktop_env = system.get_name()
 
@@ -190,8 +216,16 @@ def list_items(system_wide=False):
 
 def remove_item(name, system_wide=False):
 
-	''' Removes 'name' from system startup.
-	'system_wide' does this system-wide (requires superuser privileges).
+	'''Removes a program from startup.
+
+	Removes a program from startup.
+
+	Args:
+		name        (str) : The name of the program (as known to the system) to remove. See :func:`list_items`.
+		system_wide (bool): Remove it from system-wide startup.
+
+	Note:
+		`system_wide` requires superuser/admin privileges.
 	'''
 
 	desktop_env = system.get_name()

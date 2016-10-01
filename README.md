@@ -1,33 +1,22 @@
 # libdesktop
 
-OS and desktop integration made easy.
+OS and desktop integration made *easy*.
 
-A cross-platform library for miscellaneous OS functions and conveniences.
-Things, quirks and workarounds I've figured out, so you don't have to.
+libdesktop is a cross-platform library that makes it easy to integrate your program with the OS. No worries about quirks.
 
-License: MIT
+libdesktop is Python 2 and 3 compatible.
+
+**Install it:**
+
+    $ pip install libdesktop
+
+Or manually:
+
+    $ sudo python setup.py install
+
+[**Documentation.**](https://libdesktop.readthedocs.io)
+
+**License:** MIT
 
 *NOTE:* This library is not related *in any way* to `libdesktop-agnostic`.
 
-# Usage
-
-Install:
-
-```bash
-$ pip3 install libdesktop
-```
-
-You may need to use `sudo -H` with this.
-
-Windows and macOS users: replace `pip3` with `pip` or whatever the Python 3 `pip` is.
-
-Simply:
-
-```python
-import libdesktop
-```
-and call functions. See [documentation](#documentation)
-
-# Documentation
-
-See the doc/.
