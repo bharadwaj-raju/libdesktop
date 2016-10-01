@@ -19,13 +19,15 @@ Supports Windows (7+), OS X and Linux/Unix.
 * :ref:`search`
 
 .. toctree::
-   :maxdepth: 10
-   :caption: Contents
-   List of modules <module-list>
-   libdesktop.applications <applications>
-   libdesktop.desktopfile <desktopfile>
-   libdesktop.system <system>
-   libdesktop.startup <startup>
-   libdesktop.wallpaper <wallpaper>
+    :maxdepth: 10
+    :caption: Contents
+
+    module-list
+    applications
+    desktopfile
+    system
+    startup
+    wallpaper
+    volume
 
 
