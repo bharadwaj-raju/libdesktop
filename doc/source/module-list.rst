@@ -1,5 +1,5 @@
-Modules in libdesktop
-=====================
+Description of the Modules
+==========================
 
 libdesktop has an array[] of different modules.
 

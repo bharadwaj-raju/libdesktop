@@ -13,14 +13,12 @@ libdesktop is a library that makes it easy to integrate into the OS, without wor
 Supports Windows (7+), OS X and Linux/Unix.
 
 
-* `A list of modules. <module-list.html>`_
 * :ref:`genindex`
 * :ref:`modindex`
 * :ref:`search`
 
 .. toctree::
     :maxdepth: 10
-    :caption: Contents
 
     module-list
     applications
