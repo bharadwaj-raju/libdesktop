@@ -111,7 +111,7 @@ def unix_is_pulseaudio():
 
 	'''Check if PulseAudio is running as sound server.
 
-	Checks if `PulseAudio <https://pulseaudio.org>`_ is running as the sound server.
+	Checks if `PulseAudio <https://www.freedesktop.org/wiki/Software/PulseAudio/>`_ is running as the sound server.
 
 	Returns:
 		bool: Is PulseAudio the sound server?
