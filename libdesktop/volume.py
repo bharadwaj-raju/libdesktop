@@ -1,3 +1,11 @@
+# coding: utf-8
+
+# Copyright © 2016 Bharadwaj Raju <bharadwaj.raju@keemail.me>
+
+# Licensed under MIT License (see included LICENSE file).
+
+# This file is part of libdesktop.
+
 import subprocess as sp
 from libdesktop import system
 
@@ -12,7 +20,7 @@ def set(percentage):
 	'''
 
 	if system.get_name() == 'windows':
-		pass  # TODO
+		pass  # TODO: Implement volume for Windows. Looks like WinAPI is the solution...
 
 	elif system.get_name() == 'mac':
 		# OS X uses 0-10 instead of percentage
@@ -36,7 +44,7 @@ def get():
 	'''
 
 	if system.get_name() == 'windows':
-		pass  # TODO
+		pass  # TODO: Implement volume for Windows. Looks like WinAPI is the solution...
 
 	elif system.get_name() == 'mac':
 		volume = system.get_cmd_out(['osascript', '-e', 'set ovol to output volume of (get volume settings); return the quoted form of ovol'])
@@ -58,7 +66,7 @@ def increase(percentage):
 	'''
 
 	if system.get_name() == 'windows':
-		pass  # TODO
+		pass  # TODO: Implement volume for Windows. Looks like WinAPI is the solution...
 
 	elif system.get_name() == 'mac':
 		volume_int = percentage / 10
@@ -88,7 +96,7 @@ def decrease(percentage):
 	'''
 
 	if system.get_name() == 'windows':
-		pass  # TODO
+		pass  # TODO: Implement volume for Windows. Looks like WinAPI is the solution...
 
 	elif system.get_name() == 'mac':
 		volume_int = percentage / 10
@@ -129,7 +137,7 @@ def mute():
 	# NOTE: mute != 0 volume
 
 	if system.get_name() == 'windows':
-		pass  # TODO
+		pass  # TODO: Implement volume for Windows. Looks like WinAPI is the solution...
 
 	elif system.get_name() == 'mac':
 		sp.Popen(['osascript', '-e', 'set volume output muted true'])
@@ -153,7 +161,7 @@ def unmute():
 	'''
 
 	if system.get_name() == 'windows':
-		pass  # TODO
+		pass  # TODO: Implement volume for Windows. Looks like WinAPI is the solution...
 
 	elif system.get_name() == 'mac':
 		sp.Popen(['osascript', '-e', 'set volume output muted false'])
@@ -180,7 +188,7 @@ def is_muted():
 	'''
 
 	if system.get_name() == 'windows':
-		pass  # TODO
+		pass  # TODO: Implement volume for Windows. Looks like WinAPI is the solution...
 
 	elif system.get_name() == 'mac':
 		return system.get_cmd_out(['osascript', '-e', 'set ismuted to volume output muted; return ismuted']) == 'true'

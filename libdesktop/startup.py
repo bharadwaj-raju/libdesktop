@@ -1,7 +1,7 @@
 # coding: utf-8
 
 # Copyright © 2016 Bharadwaj Raju <bharadwaj.raju@keemail.me>
-# All Rights Reserved.
+
 
 # Licensed under MIT License (see included LICENSE file).
 
