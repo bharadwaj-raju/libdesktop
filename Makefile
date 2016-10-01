@@ -59,8 +59,8 @@ upload:
 clean:
 	@echo -e "$(BOLD)cleaning $(PROJECT_NAME) $(PROJECT_VERSION) repository$(RESET)"
 	@rm -rf build dist $(PROJECT_NAME).egg-info
-	@find -name '*.pyc' -exec rm -rf {}
-	@find -name '*.pyo' -exec rm -rf {}
-	@find -name '__pycache__' -exec rm -rf {}
+	@find -name '*.pyc' -exec 'rm -rf {}' \;
+	@find -name '*.pyo' -exec 'rm -rf {}' \;
+	@find -name '__pycache__' -exec 'rm -rf {}' \;
 
 
