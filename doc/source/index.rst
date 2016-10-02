@@ -14,8 +14,6 @@ Supports Windows (7+), OS X and Linux/Unix.
 
 
 * :ref:`genindex`
-* :ref:`modindex`
-* :ref:`search`
 
 .. toctree::
     :maxdepth: 10
