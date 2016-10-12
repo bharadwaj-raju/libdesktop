@@ -21,6 +21,7 @@ import ctypes
 from libdesktop import system
 import tempfile
 import shutil
+import subprocess as sp
 
 def get():
 
@@ -58,13 +59,8 @@ def get():
 		return system.get_cmd_out(args).replace('file://', '')
 
 	elif desktop_env == 'kde':
-		# The KDE 4+ method of changing/getting anything in the CLI is either
-		# non-existent or deprecated or horribly convoluted.
-		# There have been long-open bugs (5 years and counting) but no fix.
-
-		# Basically, there is no way.
-
-		return ''
+		# TODO
+		pass
 
 	elif desktop_env=='xfce4':
 		# XFCE4's image property is not image-path but last-image (What?)
@@ -205,27 +201,19 @@ def set(image):
 		sp.Popen(args)
 
 	elif desktop_env == 'kde':
-		# The KDE 4+ method of changing *anything* in the CLI is either
-		# non-existent or deprecated or horribly convoluted.
-		# There have been long-open bugs (5 yrs and counting) but no fix.
-
-		old_working_dir = os.getcwd()
-
-		if not os.path.isdir(os.path.join(os.path.expanduser('~'), '.wall_slide_kde')):
-			os.mkdir(os.path.join(os.path.expanduser('~'), '.wall_slide_kde'))
-
-		os.chdir(os.path.join(os.path.expanduser('~'), '.wall_slide_kde'))
-
-		for dirpath, dirnames, files in os.walk('.'):
-			if files:
-				for file in os.listdir('.'):
-					os.remove(file)
-
-		kde_random_image = tempfile.NamedTemporaryFile(delete=False)
-
-		shutil.copyfile(image, kde_random_image.name)
-
-		os.chdir(old_working_dir)
+		# This probably only works in Plasma 5+
+		sp.Popen(['''qdbus org.kde.plasmashell /PlasmaShell org.kde.PlasmaShell.evaluateScript '
+						var allDesktops = desktops();
+						print (allDesktops);
+						for (i=0;i<allDesktops.length;i++) {{
+							d = allDesktops[i];
+							d.wallpaperPlugin = "org.kde.image";
+							d.currentConfigGroup = Array("Wallpaper",
+														"org.kde.image",
+														"General");
+							d.writeConfig("Image", "file:///%s")
+						}}
+					''' % image], shell=True)
 
 	elif desktop_env in ['kde3', 'trinity']:
 		args = 'dcop kdesktop KBackgroundIface setWallpaper 0 "%s" 6' % image
