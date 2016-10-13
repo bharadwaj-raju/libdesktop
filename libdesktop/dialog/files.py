@@ -27,7 +27,7 @@ def open_file(default_dir='~', extensions=None, title='Choose a file', multiple_
 	**Note on Dependencies**
 
 	It depends on pywin32 for Windows (installed by default in Python for Windows)
-	It depends on `PyQt <https://riverbankcomputing.com/software/pyqt5>`_ for KDE and LxQt (usually installed by default on these).
+	It depends on `PyQt <https://riverbankcomputing.com/software/pyqt>`_ for KDE and LxQt (usually installed by default on these).
 	It depends on `PyGObject <https://wiki.gnome.org/Projects/PyGObject>`_ for GNOME etc. (virtually every Linux desktop has this).
 	It depends on `PyGTK <https://pygtk.org>`_ for other desktops (not usually installed, so has a GTK+ 3 fallback).
 
