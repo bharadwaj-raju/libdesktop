@@ -1,10 +1,10 @@
 from distutils.core import setup
 
-_version = 0.1  # Changed in make upload
+_version = 0.5  # Changed in make upload
 
 setup(
   name = 'libdesktop',
-  packages = ['libdesktop'],
+  packages = ['libdesktop', 'libdesktop.dialog'],
   version = str(_version),
   description = 'A cross-platform library for miscellaneous OS functions and conveniences.',
   author = 'Bharadwaj Raju',

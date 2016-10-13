@@ -24,6 +24,13 @@ def open_file(default_dir='~', extensions=None, title='Choose a file', multiple_
 	| Other desktops (Xfce, WMs etc)      | GTK+ 2 (fallback: GTK+ 3)    |
 	+-------------------------------------+------------------------------+
 
+	**Note on Dependencies**
+
+	It depends on pywin32 for Windows (installed by default in Python for Windows)
+	It depends on `PyQt <https://riverbankcomputing.com/software/pyqt5>`_ for KDE and LxQt (usually installed by default on these).
+	It depends on `PyGObject <https://wiki.gnome.org/Projects/PyGObject>`_ for GNOME etc. (virtually every Linux desktop has this).
+	It depends on `PyGTK <https://pygtk.org>`_ for other desktops (not usually installed, so has a GTK+ 3 fallback).
+
 	Args:
 		default_dir (str)   : The directory to start the dialog in. Default: User home directory.
 		extensions  (dict)  : The extensions to filter by. Format:
@@ -179,9 +186,9 @@ def open_file(default_dir='~', extensions=None, title='Choose a file', multiple_
 			pygtk.require('2.0')
 
 			dialog = gtk.FileChooserDialog(title, None,
-                               gtk.FILE_CHOOSER_ACTION_OPEN,
-							   (gtk.STOCK_CANCEL, gtk.RESPONSE_CANCEL,
-								gtk.STOCK_OPEN, gtk.RESPONSE_OK))
+                        gtk.FILE_CHOOSER_ACTION_OPEN,
+						(gtk.STOCK_CANCEL, gtk.RESPONSE_CANCEL,
+						gtk.STOCK_OPEN, gtk.RESPONSE_OK))
 
 			dialog.set_default_response(gtk.RESPONSE_OK)
 
