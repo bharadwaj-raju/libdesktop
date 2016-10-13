@@ -1,5 +1,6 @@
 PROJECT_NAME := $(shell python setup.py --name)
 PROJECT_VERSION := $(shell python setup.py --version)
+PORT := 9980
 
 SHELL := /bin/bash
 BOLD := \033[1m
@@ -30,8 +31,11 @@ lint:
 
 .PHONY: doc
 doc:
+	@echo -e "$(BOLD)making html docs for $(PROJECT_NAME) $(RESET)"
 	@cd doc && $(MAKE) html
-	@cd ..
+	@echo -e "$(BOLD)serving html docs at port $(PORT) $(RESET)"
+	@cd doc/build/html && sh -c "python3 -m http.server $(PORT) 2>/dev/null >/dev/null & disown"
+	@cd ../../..
 
 .PHONY: dist
 dist:

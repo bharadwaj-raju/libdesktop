@@ -16,7 +16,7 @@ Supports Windows (7+), OS X and Linux/Unix.
 * :ref:`genindex`
 
 .. toctree::
-    :maxdepth: 10
+    :maxdepth: 1
 
     module-list
     applications
@@ -25,5 +25,6 @@ Supports Windows (7+), OS X and Linux/Unix.
     startup
     wallpaper
     volume
+    dialog
 
 

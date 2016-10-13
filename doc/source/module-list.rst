@@ -57,3 +57,10 @@ libdesktop.volume
 Functions for system volume.
 
 Set, get, increase, decrease etc. the volume.
+
+libdesktop.dialog
+-----------------
+
+`Documentation <dialog.html>`_
+
+Native system dialogs for files, printing etc.
