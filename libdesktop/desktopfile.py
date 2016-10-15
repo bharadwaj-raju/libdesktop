@@ -8,7 +8,6 @@
 
 import os
 import subprocess as sp
-from libdesktop.applications import terminal
 from libdesktop import system
 import sys
 
