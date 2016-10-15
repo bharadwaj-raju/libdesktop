@@ -19,7 +19,7 @@ def get_cmd_out(command):
 	Gets a nice Unicode no-extra-whitespace string of the ``stdout`` of a given command.
 
 	Args:
-		command (str or list): A string of the command, or a list of the arguments (as would be used in :class:``subprocess.Popen``).
+		command (str or list): A string of the command, or a list of the arguments (as would be used in :class:`subprocess.Popen`).
 
 	Note:
 		If ``command`` is a ``str``, it will be evaluated with ``shell=True`` i.e. in the default shell (for example, bash).

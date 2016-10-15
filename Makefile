@@ -33,11 +33,8 @@ lint:
 .PHONY: doc
 doc:
 	@echo -e "$(BOLD)making html docs for $(PROJECT_NAME) $(RESET)"
-	@cd doc && $(MAKE) html
+	@cd doc && $(MAKE) html && cd build/html && sh -c "pwd; python3 -m http.server $(PORT) 2>/dev/null >/dev/null & disown"
 	@echo -e "$(BOLD)serving html docs at port $(PORT) $(RESET)"
-	@cd doc/build/html && sh -c "python3 -m http.server $(PORT) 2>/dev/null >/dev/null & disown"
-	@echo -e "$(BOLD)copying html to gh-pages"
-	@git checkout gh-pages && git checkout master doc/build/html && mv -f doc/build/html/* ./ && rm -rf doc/ && git checkout master
 
 .PHONY: test
 test:
