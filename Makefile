@@ -2,6 +2,7 @@ PROJECT_NAME := $(shell python setup.py --name)
 PROJECT_VERSION := $(shell python setup.py --version)
 PORT := 9980
 
+
 SHELL := /bin/bash
 BOLD := \033[1m
 DIM := \033[2m
@@ -35,7 +36,7 @@ doc:
 	@cd doc && $(MAKE) html
 	@echo -e "$(BOLD)serving html docs at port $(PORT) $(RESET)"
 	@cd doc/build/html && sh -c "python3 -m http.server $(PORT) 2>/dev/null >/dev/null & disown"
-	@cd ../../..
+	@echo -e "$(BOLD)copying html to gh-pages"
 
 .PHONY: test
 test:
