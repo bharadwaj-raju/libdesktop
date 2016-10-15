@@ -9,6 +9,8 @@
 import os
 import subprocess as sp
 from libdesktop.applications import terminal
+from libdesktop import system
+import sys
 
 def construct(name, exec_, terminal=False, additional_opts={}):
 
@@ -84,6 +86,10 @@ def execute(desktop_file, files=None, return_cmd=False, background=False):
 			desktop_file_exec += ' ' + i
 
 	if parse(desktop_file)['Terminal']:
+		desktop_file_exec = system.get_cmd_out([sys.executable, '-c',
+												('from libdesktop.applications import terminal;'
+												'print(terminal(exec_="%s", keep_open_after_cmd_exec=True, return_cmd=True))' % desktop_file_exec)])
+
 		desktop_file_exec = terminal(exec_=desktop_file_exec, keep_open_after_cmd_exec=True, return_cmd=True)
 
 	if return_cmd:
