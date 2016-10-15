@@ -28,7 +28,7 @@ def add_item(name, command, system_wide=False):
 		system_wide (bool): Add to system-wide startup.
 
 	Note:
-		`system_wide` requires superuser/admin privileges.
+		``system_wide`` requires superuser/admin privileges.
 
 	'''
 
@@ -220,11 +220,11 @@ def remove_item(name, system_wide=False):
 	Removes a program from startup.
 
 	Args:
-		name        (str) : The name of the program (as known to the system) to remove. See :func:`list_items`.
+		name        (str) : The name of the program (as known to the system) to remove. See :func:``list_items``.
 		system_wide (bool): Remove it from system-wide startup.
 
 	Note:
-		`system_wide` requires superuser/admin privileges.
+		``system_wide`` requires superuser/admin privileges.
 	'''
 
 	desktop_env = system.get_name()

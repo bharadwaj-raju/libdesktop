@@ -18,6 +18,8 @@ Supports Windows (7+), OS X and Linux/Unix.
 .. toctree::
     :maxdepth: 1
 
+    installation
+
     module-list
     applications
     desktopfile
@@ -26,5 +28,7 @@ Supports Windows (7+), OS X and Linux/Unix.
     wallpaper
     volume
     dialog
+
+    testing
 
 

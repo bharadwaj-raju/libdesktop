@@ -1,0 +1,1 @@
+If this file opens in your default GUI text editor as part of the tests, it means applications.text_editor() works!

@@ -16,16 +16,16 @@ def get_cmd_out(command):
 
 	'''Get the output of a command.
 
-	Gets a nice Unicode no-extra-whitespace string of the `stdout` of a given command.
+	Gets a nice Unicode no-extra-whitespace string of the ``stdout`` of a given command.
 
 	Args:
-		command (str or list): A string of the command, or a list of the arguments (as would be used in :class:`subprocess.Popen`).
+		command (str or list): A string of the command, or a list of the arguments (as would be used in :class:``subprocess.Popen``).
 
 	Note:
-		If `command` is a `str`, it will be evaluated with `shell=True` i.e. in the default shell (for example, bash).
+		If ``command`` is a ``str``, it will be evaluated with ``shell=True`` i.e. in the default shell (for example, bash).
 
 	Returns:
-		str: The `stdout` of the command.'''
+		str: The ``stdout`` of the command.'''
 
 	if type(command) == list:
 		result = sp.check_output(command)
@@ -125,7 +125,7 @@ def get_name():
 
 	Get the OS name or desktop environment.
 
-	List of Possible Values:
+	**List of Possible Values**
 
 	+-------------------------+---------------+
 	| Windows                 | windows       |
@@ -242,15 +242,15 @@ def get_name():
 def is_in_path(program):
 
 	'''
-	Check if a program is in the system `PATH`.
+	Check if a program is in the system ``PATH``.
 
-	Checks if a given program is in the user's `PATH` or not.
+	Checks if a given program is in the user's ``PATH`` or not.
 
 	Args:
-		program (str): The program to try to find in `PATH`.
+		program (str): The program to try to find in ``PATH``.
 
 	Returns:
-		bool: Is the program in `PATH`?
+		bool: Is the program in ``PATH``?
 	'''
 
 	if sys.version_info.major == 2:
@@ -274,7 +274,7 @@ def is_running(process):
 	Check if the given process name is running or not.
 
 	Note:
-		On a Linux system, kernel threads (like	`kthreadd` etc.) are excluded.
+		On a Linux system, kernel threads (like	``kthreadd`` etc.) are excluded.
 
 	Args:
 		process (str): The name of the process.

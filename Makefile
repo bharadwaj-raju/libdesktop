@@ -37,6 +37,11 @@ doc:
 	@cd doc/build/html && sh -c "python3 -m http.server $(PORT) 2>/dev/null >/dev/null & disown"
 	@cd ../../..
 
+.PHONY: test
+test:
+	@cd tests/ && py.test -s
+	@cd ..
+
 .PHONY: dist
 dist:
 	@python setup.py sdist --formats=zip --dist-dir=dist
@@ -53,7 +58,19 @@ clean:
 	@find -name '*.pyc' -exec 'rm -rf {}' \;
 	@find -name '*.pyo' -exec 'rm -rf {}' \;
 	@find -name '__pycache__' -exec 'rm -rf {}' \;
+	@rm -rf build
+	@rm -rf dist
 
 .PHONY: todo
 todo:
-	@find -name '*.py' -exec grep TODO /dev/null {} \; | sed 's/pass  //g'
+	@find -name '*.py' -exec perl -lne 'print $$1 if /TODO: (.*)/' {} \; | uniq | sed -e 's/^/- /g'
+
+.PHONY: new-release
+new-release:
+	@sed -i setup.py -e 's/_version = .*/_version = $(NEW_VERSION)/g'
+	@python setup.py sdist upload -r pypi
+	@sed -i doc/source/conf.py -e "s/version = .*/version = '$(NEW_VERSION)'/g"
+	@git add .
+	@git commit
+	@git tag -a v$(NEW_VERSION) -m "$(RELEASE_MESSAGE)"
+	@git push

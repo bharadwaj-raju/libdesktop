@@ -8,7 +8,7 @@
 
 import os
 import subprocess as sp
-from libdesktop import applications
+from libdesktop.applications import terminal
 
 def construct(name, exec_, terminal=False, additional_opts={}):
 
@@ -19,7 +19,7 @@ def construct(name, exec_, terminal=False, additional_opts={}):
 	Args:
 		name            (str) : The program's name.
 		exec\_          (str) : The command.
-		terminal        (bool): Determine if program should be run in a terminal emulator or not. Defaults to False.
+		terminal        (bool): Determine if program should be run in a terminal emulator or not. Defaults to ``False``.
 		additional_opts (dict): Any additional fields.
 
 	Returns:
@@ -35,81 +35,64 @@ def construct(name, exec_, terminal=False, additional_opts={}):
 		'Comment'  : additional_opts['Comment'] if 'Comment' in additional_opts else name
 	}
 
-	for option, value in desktop_file_dict.items():
-		desktop_file += '%s=%s\n' % (option, value)
+	desktop_file = '[Desktop Entry]\nName={name}\nExec={exec_}\nTerminal={terminal}\nComment={comment}\n'
+
+	desktop_file = desktop_file.format(name=desktop_file_dict['Name'],
+										exec_=desktop_file_dict['Exec'],
+										terminal=desktop_file_dict['Terminal'],
+										comment=desktop_file_dict['Comment'])
 
 	if additional_opts is None:
 		additional_opts = {}
 
-	for option, value in additional_opts:
-		if not desktop_file_dict.has_key(option):
-			desktop_file += '%s=%s\n' % (option, value)
+	for option in additional_opts:
+		if not option in desktop_file_dict:
+			desktop_file += '%s=%s\n' % (option, additional_opts[option])
 
-	return desktop_file.rstrip('\r\n')
+	return desktop_file
 
-def execute(desktop_file, files=None, force_manual_parsing=False, manual_parsing_return_cmd=False, manual_parsing_background=False):
+def execute(desktop_file, files=None, return_cmd=False, background=False):
 
 	'''Execute a .desktop file.
 
 	Executes a given .desktop file path properly.
 
 	Args:
-		desktop_file              (str) : The path to the .desktop file.
-		files                     (list): Any files to be launched by the .desktop. Defaults to empty list.
-		force_manual_parsing      (bool): Force manual parsing (as opposed to using Gio). Defaults to False.
-		                                  Manual parsing is also used as a fallback to Gio.
-		manual_parsing_return_cmd (bool): (Only when using manual parsing) Return the command (`str`) instead of executing. Defaults to `False`.
-		manual_parsing_background (bool): (Only when using manual parsing) Run command in background. Defaults to `False`.
+		desktop_file (str) : The path to the .desktop file.
+		files        (list): Any files to be launched by the .desktop. Defaults to empty list.
+		return_cmd   (bool): Return the command (as ``str``) instead of executing. Defaults to ``False``.
+		background   (bool): Run command in background. Defaults to ``False``.
 
 	Returns:
-		str: Only if `manual_parsing_return_cmd`. Returns command instead of running it. Else returns nothing.
+		str: Only if ``return_cmd``. Returns command instead of running it. Else returns nothing.
 	'''
 
-	def __manual_parse_execute():
+	# Attempt to manually parse and execute
 
-		# Attempt to manually parse and execute
+	desktop_file_exec = parse(desktop_file)['Exec']
 
-		desktop_file_exec = parse(desktop_file)['Exec']
+	for i in desktop_file_exec.split():
+		if i.startswith('%'):
+			desktop_file_exec = desktop_file_exec.replace(i, '')
 
-		desktop_file_exec = desktop_file_exec.replace(r'%F', '')
-		desktop_file_exec = desktop_file_exec.replace(r'%f', '')
 
-		if files:
-			for i in files:
-				desktop_file_exec += ' ' + i
+	desktop_file_exec = desktop_file_exec.replace(r'%F', '')
+	desktop_file_exec = desktop_file_exec.replace(r'%f', '')
 
-		if parse(desktop_file)['Terminal']:
-			desktop_file_exec = applications.terminal(exec_=desktop_file_exec, return_cmd=True)
+	if files:
+		for i in files:
+			desktop_file_exec += ' ' + i
 
-		return 'lh'
+	if parse(desktop_file)['Terminal']:
+		desktop_file_exec = terminal(exec_=desktop_file_exec, keep_open_after_cmd_exec=True, return_cmd=True)
 
-		if manual_parsing_return_cmd:
-			return 'hello'
+	if return_cmd:
+		return desktop_file_exec
 
-		desktop_file_proc = sp.Popen([desktop_file_exec], shell=True)
+	desktop_file_proc = sp.Popen([desktop_file_exec], shell=True)
 
-		if not manual_parsing_background:
-			desktop_file_proc.wait()
-
-	try:
-		if force_manual_parsing:
-			return __manual_parse_execute()
-
-		else:
-			from gi.repository import Gio
-
-			if files is None:
-				files = []
-
-			for path in files:
-				if '://' not in path:
-					files[files.index(path)] = 'file://' + path
-
-			launcher = Gio.DesktopAppInfo.new_from_filename(desktop_file)
-			launcher.launch_uris(files, None)
-
-	except:
-		return __manual_parse_execute()
+	if not background:
+		desktop_file_proc.wait()
 
 def locate(desktop_filename_or_name):
 

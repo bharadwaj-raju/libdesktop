@@ -1,6 +1,6 @@
 from distutils.core import setup
 
-_version = 0.5  # Changed in make upload
+_version = 0.6
 
 setup(
   name = 'libdesktop',

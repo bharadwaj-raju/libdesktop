@@ -26,12 +26,12 @@ def set(percentage):
 		# OS X uses 0-10 instead of percentage
 		volume_int = percentage / 10
 
-		sp.Popen(['osascript', '-e', 'set Volume %d' % volume_int])
+		sp.Popen(['osascript', '-e', 'set Volume %d' % volume_int]).wait()
 
 	else:
 		# Linux/Unix
 		formatted = str(percentage) + '%'
-		sp.Popen(['amixer', '--quiet', 'sset', 'Master', formatted])
+		sp.Popen(['amixer', '--quiet', 'sset', 'Master', formatted]).wait()
 
 def get():
 
@@ -83,7 +83,7 @@ def increase(percentage):
 		# Linux/Unix
 		formatted = '%d%%+' % percentage  # + or - increases/decreases in amixer
 
-		sp.Popen(['amixer', '--quiet', 'sset', 'Master', formatted])
+		sp.Popen(['amixer', '--quiet', 'sset', 'Master', formatted]).wait()
 
 def decrease(percentage):
 
@@ -113,7 +113,7 @@ def decrease(percentage):
 		# Linux/Unix
 		formatted = '%d%%-' % percentage  # + or - increases/decreases in amixer
 
-		sp.Popen(['amixer', '--quiet', 'sset', 'Master', formatted])
+		sp.Popen(['amixer', '--quiet', 'sset', 'Master', formatted]).wait()
 
 def unix_is_pulseaudio():
 
@@ -140,15 +140,15 @@ def mute():
 		pass  # TODO: Implement volume for Windows. Looks like WinAPI is the solution...
 
 	elif system.get_name() == 'mac':
-		sp.Popen(['osascript', '-e', 'set volume output muted true'])
+		sp.Popen(['osascript', '-e', 'set volume output muted true']).wait()
 
 	else:
 		# Linux/Unix
 		if unix_is_pulseaudio():
-			sp.Popen(['amixer', '--quiet', '-D', 'pulse', 'sset', 'Master', 'mute'])  # sset is *not* a typo
+			sp.Popen(['amixer', '--quiet', '-D', 'pulse', 'sset', 'Master', 'mute']).wait()  # sset is *not* a typo
 
 		else:
-			sp.Popen(['amixer', '--quiet', 'sset', 'Master', 'mute'])
+			sp.Popen(['amixer', '--quiet', 'sset', 'Master', 'mute']).wait()
 
 def unmute():
 
@@ -164,15 +164,15 @@ def unmute():
 		pass  # TODO: Implement volume for Windows. Looks like WinAPI is the solution...
 
 	elif system.get_name() == 'mac':
-		sp.Popen(['osascript', '-e', 'set volume output muted false'])
+		sp.Popen(['osascript', '-e', 'set volume output muted false']).wait()
 
 	else:
 		# Linux/Unix
 		if unix_is_pulseaudio():
-			sp.Popen(['amixer', '--quiet', '-D', 'pulse', 'sset', 'Master', 'unmute'])  # sset is *not* a typo
+			sp.Popen(['amixer', '--quiet', '-D', 'pulse', 'sset', 'Master', 'unmute']).wait()  # sset is *not* a typo
 
 		else:
-			sp.Popen(['amixer', '--quiet', 'sset', 'Master', 'unmute'])
+			sp.Popen(['amixer', '--quiet', 'sset', 'Master', 'unmute']).wait()
 
 def is_muted():
 

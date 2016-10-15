@@ -59,8 +59,7 @@ def get():
 		return system.get_cmd_out(args).replace('file://', '')
 
 	elif desktop_env == 'kde':
-		# TODO
-		pass
+		pass  # TODO: Implement wallpaper.get() for KDE. Possibly derive from set()
 
 	elif desktop_env=='xfce4':
 		# XFCE4's image property is not image-path but last-image (What?)

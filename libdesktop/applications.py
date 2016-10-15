@@ -10,7 +10,7 @@ import subprocess as sp
 import tempfile
 import os
 
-from libdesktop import __desktopfile_noexecute as desktopfile
+from libdesktop import desktopfile
 from libdesktop import system
 
 def mac_app_exists(app):
@@ -53,40 +53,42 @@ def open_file_with_default_program(file, background=False, return_cmd=False):
 
 	Args:
 		file       (str) : Path to the file to be opened.
-		background (bool): Run the program in the background, instead of waiting for completion. Defaults to `False`.
-		return_cmd (bool): Returns the command to run the program (str) instead of running it. Defaults to `False`.
+		background (bool): Run the program in the background, instead of waiting for completion. Defaults to ``False``.
+		return_cmd (bool): Returns the command to run the program (str) instead of running it. Defaults to ``False``.
 
 	Returns:
-		str: Only if `return_cmd`, the command to run the program is returned instead of running it. Else returns nothing.
+		str: Only if ``return_cmd``, the command to run the program is returned instead of running it. Else returns nothing.
 	'''
 
 	desktop_env = system.get_name()
 
 	if desktop_env == 'windows':
-		open_file_cmd_str = 'explorer.exe ' + file
+		open_file_cmd = 'explorer.exe ' + "'%s'" % file
 
 	elif desktop_env == 'mac':
-		open_file_cmd_str = 'open ' + file
+		open_file_cmd = 'open ' + "'%s'" % file
 
 	else:
-		open_file_cmd_str = 'xdg-open ' + file
+		file_mime_type = system.get_cmd_out(['xdg-mime', 'query', 'filetype', file])
+		desktop_file = system.get_cmd_out(['xdg-mime', 'query', 'default', file_mime_type])
+		open_file_cmd = desktopfile.execute(desktopfile.locate(desktop_file)[0], files=[file], return_cmd=True)
 
 	if return_cmd:
-		return open_file_cmd_str
+		return open_file_cmd
 
 	else:
-		def_program_proc = sp.Popen([open_file_cmd_str], shell=True)
+		def_program_proc = sp.Popen(open_file_cmd, shell=True)
 
 		if not background:
 			def_program_proc.wait()
 
-def terminal(exec_='', background=False, shell_after_cmd_exec=False, return_cmd=False):
+def terminal(exec_='', background=False, shell_after_cmd_exec=False, keep_open_after_cmd_exec=False, return_cmd=False):
 
 	'''Start the default terminal emulator.
 
 	Start the user's preferred terminal emulator, optionally running a command in it.
 
-	Order of starting:
+	**Order of starting**
 		Windows:
 			Powershell
 
@@ -95,8 +97,8 @@ def terminal(exec_='', background=False, shell_after_cmd_exec=False, return_cmd=
 			- Terminal.app
 
 		Linux/Unix:
-			- `$TERMINAL`
-			- `x-terminal-emulator`
+			- ``$TERMINAL``
+			- ``x-terminal-emulator``
 			- Terminator
 			- Desktop environment's terminal
 			- gnome-terminal
@@ -106,11 +108,11 @@ def terminal(exec_='', background=False, shell_after_cmd_exec=False, return_cmd=
 
 	Args:
 		exec\_               (str) : An optional command to run in the opened terminal emulator. Defaults to empty (no command).
-		background           (bool): Run the terminal in the background, instead of waiting for completion. Defaults to `False`.
+		background           (bool): Run the terminal in the background, instead of waiting for completion. Defaults to ``False``.
 		shell_after_cmd_exec (bool): Start the user's shell after running the command (see exec_). Defaults to `False`.
-		return_cmd           (bool): Returns the command used to start the terminal (str) instead of running it. Defaults to `False`.
+		return_cmd           (bool): Returns the command used to start the terminal (str) instead of running it. Defaults to ``False``.
 	Returns:
-		str: Only if `return_cmd`, returns the command to run the terminal instead of running it. Else returns nothing.
+		str: Only if ``return_cmd``, returns the command to run the terminal instead of running it. Else returns nothing.
 	'''
 
 	desktop_env = system.get_name()
@@ -134,7 +136,7 @@ def terminal(exec_='', background=False, shell_after_cmd_exec=False, return_cmd=
 		# sensible-terminal
 
 		if os.getenv('TERMINAL'):
-			# Non-standard, but if user *really* has a preference, they will
+			# Not everywhere, but if user *really* has a preference, they will
 			# set this
 
 			terminal_cmd_str = os.getenv('TERMINAL')
@@ -188,18 +190,28 @@ def terminal(exec_='', background=False, shell_after_cmd_exec=False, return_cmd=
 
 	if exec_:
 		if desktop_env == 'windows':
+			if keep_open_after_cmd_exec and not shell_after_cmd_exec:
+				exec_ += '; pause'
+
 			if os.path.isfile(exec_):
 				terminal_cmd_str += exec_
+
 			else:
 				terminal_cmd_str += ' -Command ' + '"' + exec_ + '"'
+
 			if shell_after_cmd_exec:
 				terminal_cmd_str += ' -NoExit'
 
 		else:
+			if keep_open_after_cmd_exec and not shell_after_cmd_exec:
+				exec_ += '; read'
+
 			if shell_after_cmd_exec:
 				exec_ += ' ; ' + os.getenv('SHELL')
+
 			if desktop_env == 'mac':
 				terminal_cmd_str += ' ' + 'sh -c ' + '"' + exec_ + '"'
+
 			else:
 				terminal_cmd_str += ' -e \'sh -c ' + '"' + exec_ + '"\''
 
@@ -220,11 +232,11 @@ def text_editor(files=None, background=False, return_cmd=False):
 
 	Args:
 		files      (list): A list of files to be opened with the editor. Defaults to an empty list.
-		background (bool): Runs the editor in the background, instead of waiting for completion. Defaults to `False`.
-		return_cmd (bool): Returns the command (str) to run the editor instead of running it. Defaults to `False`.
+		background (bool): Runs the editor in the background, instead of waiting for completion. Defaults to ``False``.
+		return_cmd (bool): Returns the command (str) to run the editor instead of running it. Defaults to ``False``.
 
 	Returns:
-		str: Only if `return_cmd`, the command to run the editor is returned. Else returns nothing.
+		str: Only if ``return_cmd``, the command to run the editor is returned. Else returns nothing.
 	'''
 
 	if files is None:
