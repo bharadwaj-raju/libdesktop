@@ -9,7 +9,7 @@
 import subprocess as sp
 from libdesktop import system
 
-def set(percentage):
+def set_volume(percentage):
 
 	'''Set the volume.
 
@@ -17,7 +17,13 @@ def set(percentage):
 
 	Args:
 		percentage (int): The percentage (as a 0 to 100 integer) to set the volume to.
+
+	Raises:
+		ValueError: if the percentage is >100 or <0.
 	'''
+
+	if percentage > 100 or percentage < 0:
+		raise ValueError('percentage must be an integer between 0 and 100')
 
 	if system.get_name() == 'windows':
 		pass  # TODO: Implement volume for Windows. Looks like WinAPI is the solution...
@@ -33,7 +39,7 @@ def set(percentage):
 		formatted = str(percentage) + '%'
 		sp.Popen(['amixer', '--quiet', 'sset', 'Master', formatted]).wait()
 
-def get():
+def get_volume():
 
 	'''Get the volume.
 
@@ -55,7 +61,7 @@ def get():
 		volume = system.get_cmd_out('amixer get Master |grep % |awk \'{print $5}\'|sed -e \'s/\[//\' -e \'s/\]//\' | head -n1')
 		return int(volume.replace('%', ''))
 
-def increase(percentage):
+def increase_volume(percentage):
 
 	'''Increase the volume.
 
@@ -63,7 +69,13 @@ def increase(percentage):
 
 	Args:
 		percentage (int): The percentage (as an integer between 0 and 100) to increase the volume by.
+
+	Raises:
+		ValueError: if the percentage is >100 or <0.
 	'''
+
+	if percentage > 100 or percentage < 0:
+		raise ValueError('percentage must be an integer between 0 and 100')
 
 	if system.get_name() == 'windows':
 		pass  # TODO: Implement volume for Windows. Looks like WinAPI is the solution...
@@ -77,7 +89,7 @@ def increase(percentage):
 		if new_volume > 10:
 			new_volume = 10
 
-		set(new_volume * 10)
+		set_volume(new_volume * 10)
 
 	else:
 		# Linux/Unix
@@ -85,7 +97,7 @@ def increase(percentage):
 
 		sp.Popen(['amixer', '--quiet', 'sset', 'Master', formatted]).wait()
 
-def decrease(percentage):
+def decrease_volume(percentage):
 
 	'''Decrease the volume.
 
@@ -93,7 +105,13 @@ def decrease(percentage):
 
 	Args:
 		percentage (int): The percentage (as an integer between 0 and 100) to decrease the volume by.
+
+	Raises:
+		ValueError: if the percentage is >100 or <0.
 	'''
+
+	if percentage > 100 or percentage < 0:
+		raise ValueError('percentage must be an integer between 0 and 100')
 
 	if system.get_name() == 'windows':
 		pass  # TODO: Implement volume for Windows. Looks like WinAPI is the solution...
@@ -107,7 +125,7 @@ def decrease(percentage):
 		if new_volume < 0:
 			new_volume = 0
 
-		set(new_volume * 10)
+		set_volume(new_volume * 10)
 
 	else:
 		# Linux/Unix
@@ -115,7 +133,7 @@ def decrease(percentage):
 
 		sp.Popen(['amixer', '--quiet', 'sset', 'Master', formatted]).wait()
 
-def unix_is_pulseaudio():
+def unix_is_pulseaudio_server():
 
 	'''Check if PulseAudio is running as sound server.
 
@@ -144,7 +162,7 @@ def mute():
 
 	else:
 		# Linux/Unix
-		if unix_is_pulseaudio():
+		if unix_is_pulseaudio_server():
 			sp.Popen(['amixer', '--quiet', '-D', 'pulse', 'sset', 'Master', 'mute']).wait()  # sset is *not* a typo
 
 		else:
@@ -168,7 +186,7 @@ def unmute():
 
 	else:
 		# Linux/Unix
-		if unix_is_pulseaudio():
+		if unix_is_pulseaudio_server():
 			sp.Popen(['amixer', '--quiet', '-D', 'pulse', 'sset', 'Master', 'unmute']).wait()  # sset is *not* a typo
 
 		else:

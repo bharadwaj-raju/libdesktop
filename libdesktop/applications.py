@@ -9,6 +9,7 @@
 import subprocess as sp
 import tempfile
 import os
+import shlex
 
 from libdesktop import desktopfile
 from libdesktop import system
@@ -207,13 +208,13 @@ def terminal(exec_='', background=False, shell_after_cmd_exec=False, keep_open_a
 				exec_ += '; read'
 
 			if shell_after_cmd_exec:
-				exec_ += ' ; ' + os.getenv('SHELL')
+				exec_ += '; ' + os.getenv('SHELL')
 
 			if desktop_env == 'mac':
-				terminal_cmd_str += ' ' + 'sh -c ' + '"' + exec_ + '"'
+				terminal_cmd_str += ' sh -c {}'.format(shlex.quote(exec_))
 
 			else:
-				terminal_cmd_str += ' -e \'sh -c ' + '"' + exec_ + '"\''
+				terminal_cmd_str += ' -e {}'.format(shlex.quote('sh -c {}'.format(shlex.quote(exec_))))
 
 	if return_cmd:
 		return terminal_cmd_str
@@ -224,23 +225,20 @@ def terminal(exec_='', background=False, shell_after_cmd_exec=False, keep_open_a
 		# Wait for process to complete
 		terminal_proc.wait()
 
-def text_editor(files=None, background=False, return_cmd=False):
+def text_editor(file='', background=False, return_cmd=False):
 
 	'''Starts the default graphical text editor.
 
 	Start the user's preferred graphical text editor, optionally with a file.
 
 	Args:
-		files      (list): A list of files to be opened with the editor. Defaults to an empty list.
+		file       (str) : The file to be opened with the editor. Defaults to an empty string (i.e. no file).
 		background (bool): Runs the editor in the background, instead of waiting for completion. Defaults to ``False``.
 		return_cmd (bool): Returns the command (str) to run the editor instead of running it. Defaults to ``False``.
 
 	Returns:
 		str: Only if ``return_cmd``, the command to run the editor is returned. Else returns nothing.
 	'''
-
-	if files is None:
-		files = []
 
 	desktop_env = system.get_name()
 
@@ -274,12 +272,13 @@ def text_editor(files=None, background=False, return_cmd=False):
 				# Gedit
 				editor_cmd_str = editor_cmd_str.replace(i, '')
 
-	final_cmd = editor_cmd_str + ' ' + ' '.join(files)
+	if file:
+		editor_cmd_str += ' {}'.format(shlex.quote(file))
 
 	if return_cmd:
-		return final_cmd
+		return editor_cmd_str
 
-	text_editor_proc = sp.Popen([final_cmd], shell=True)
+	text_editor_proc = sp.Popen([editor_cmd_str], shell=True)
 
 	if not background:
 		text_editor_proc.wait()

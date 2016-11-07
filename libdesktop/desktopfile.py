@@ -89,8 +89,6 @@ def execute(desktop_file, files=None, return_cmd=False, background=False):
 												('from libdesktop.applications import terminal;'
 												'print(terminal(exec_="%s", keep_open_after_cmd_exec=True, return_cmd=True))' % desktop_file_exec)])
 
-		desktop_file_exec = terminal(exec_=desktop_file_exec, keep_open_after_cmd_exec=True, return_cmd=True)
-
 	if return_cmd:
 		return desktop_file_exec
 

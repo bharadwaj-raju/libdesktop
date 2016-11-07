@@ -66,10 +66,10 @@ todo:
 
 .PHONY: new-release
 new-release:
-	@sed -i setup.py -e 's/_version = .*/_version = $(NEW_VERSION)/g'
+	@sed -i setup.py -e 's/_version = .*/_version = "$(NEW_VERSION)"/g'
 	@python setup.py sdist upload -r pypi
-	@sed -i doc/source/conf.py -e "s/version = .*/version = '$(NEW_VERSION)'/g"
+	@sed -i doc/source/conf.py -e 's/version = .*/version = "$(NEW_VERSION)"/g'
 	@git add .
 	@git commit
-	@git tag -a v$(NEW_VERSION) -m "$(RELEASE_MESSAGE)"
+	@git tag -a $(NEW_VERSION) -m "$(RELEASE_MESSAGE)"
 	@git push

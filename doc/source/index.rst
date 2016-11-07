@@ -4,11 +4,12 @@
    contain the root `toctree` directive.
 
 libdesktop
-======================================
+===========
 
 OS and desktop integration made *easy*.
 
 libdesktop is a library that makes it easy to integrate into the OS, without worrying about its quirks.
+It aims to provide a common interface to different OSes, for things ranging from default applications to user directories to startup to sound.
 
 Supports Windows (7+), OS X and Linux/Unix.
 
@@ -18,8 +19,8 @@ Supports Windows (7+), OS X and Linux/Unix.
 .. toctree::
     :maxdepth: 1
 
+    index
     installation
-
     module-list
     applications
     desktopfile

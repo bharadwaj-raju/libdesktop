@@ -23,7 +23,7 @@ import tempfile
 import shutil
 import subprocess as sp
 
-def get():
+def get_wallpaper():
 
 	'''Get the desktop wallpaper.
 
@@ -155,7 +155,7 @@ def get():
 			OSX_SCRIPT = 'tell app "finder" to get posix path of (get desktop picture as alias)'
 
 			return system.get_cmd_out(['osascript', OSX_SCRIPT])
-def set(image):
+def set_wallpaper(image):
 
 	'''Set the desktop wallpaper.
 
@@ -211,7 +211,7 @@ def set(image):
 														"org.kde.image",
 														"General");
 							d.writeConfig("Image", "file:///%s")
-						}}
+						}}'
 					''' % image], shell=True)
 
 	elif desktop_env in ['kde3', 'trinity']:

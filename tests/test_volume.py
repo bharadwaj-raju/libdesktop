@@ -6,31 +6,31 @@ def test_volume_get():
 
 	print('The current volume is:', libdesktop.volume.get())
 
-def test_volume_set():
+def test_volume_set_volume():
 
 	print('Setting volume to 100%')
-	libdesktop.volume.set(100)
+	libdesktop.volume.set_volume(100)
 
 	print('It is now:', libdesktop.volume.get())
 
 	assert libdesktop.volume.get() == 100
 
 	print('Setting volume to 53%')
-	libdesktop.volume.set(53)
+	libdesktop.volume.set_volume(53)
 
 	print('It is now:', libdesktop.volume.get())
 
 	assert libdesktop.volume.get() == 53
 
 	print('Setting volume back to 100%')
-	libdesktop.volume.set(100)
+	libdesktop.volume.set_volume(100)
 
 def test_volume_increase():
 
 	print('Current volume:', libdesktop.volume.get())
 
 	print('Setting volume to 50%')
-	libdesktop.volume.set(50)
+	libdesktop.volume.set_volume(50)
 
 	print('Increasing volume by 25%')
 	libdesktop.volume.increase(25)
@@ -44,7 +44,7 @@ def test_volume_decrease():
 	print('Current volume:', libdesktop.volume.get())
 
 	print('Setting volume to 50%')
-	libdesktop.volume.set(50)
+	libdesktop.volume.set_volume(50)
 
 	print('Decreasing volume by 25%')
 	libdesktop.volume.decrease(25)
@@ -53,9 +53,9 @@ def test_volume_decrease():
 
 	assert libdesktop.volume.get() == 25
 
-def test_volume_unix_is_pulseaudio():
+def test_volume_unix_is_pulseaudio_server():
 
-	print('The PulseAudio sound server %s' % 'is running' if libdesktop.volume.unix_is_pulseaudio() else 'is not running.')
+	print('The PulseAudio sound server %s' % 'is running' if libdesktop.volume.unix_is_pulseaudio_server() else 'is not running.')
 
 def test_volume_mute():
 

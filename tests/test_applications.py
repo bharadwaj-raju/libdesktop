@@ -49,7 +49,7 @@ def test_applications_text_editor():
 		no_gui = False
 
 	print(libdesktop.applications.text_editor(return_cmd=True))
-	print(libdesktop.applications.text_editor(files=['test_plaintext.txt'], return_cmd=True))
+	print(libdesktop.applications.text_editor(file='test_plaintext.txt', return_cmd=True))
 
 	if no_gui:
 		return
@@ -58,7 +58,7 @@ def test_applications_text_editor():
 	libdesktop.applications.text_editor()
 
 	print('Opening "test_plaintext.txt" text file in the system text editor. Verify that correct program is opened.')
-	libdesktop.applications.text_editor(files=['test_plaintext.txt'])
+	libdesktop.applications.text_editor(file='test_plaintext.txt')
 
 def test_applications_open_with_default_program():
 
