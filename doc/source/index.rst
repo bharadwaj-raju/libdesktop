@@ -19,7 +19,6 @@ Supports Windows (7+), OS X and Linux/Unix.
 .. toctree::
     :maxdepth: 1
 
-    index
     installation
     module-list
     applications
