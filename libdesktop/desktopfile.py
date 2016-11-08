@@ -97,9 +97,8 @@ def execute(desktop_file, files=None, return_cmd=False, background=False):
 			desktop_file_exec += ' ' + i
 
 	if parse(desktop_file)['Terminal']:
-		desktop_file_exec = system.get_cmd_out([sys.executable, '-c',
-												('from libdesktop.applications import terminal;'
-												'print(terminal(exec_="%s", keep_open_after_cmd_exec=True, return_cmd=True))' % desktop_file_exec)])
+		# Use eval and __import__ to bypass a circular dependency
+		desktop_file_exec = eval('__import__("libdesktop").applications.terminal(exec_="%s", keep_open_after_cmd_exec=True, return_cmd=True)')
 
 	if return_cmd:
 		return desktop_file_exec

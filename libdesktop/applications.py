@@ -62,17 +62,18 @@ def mac_app_exists(app):
 
 	if app_check_proc.wait() != 0:
 		return False
+
 	else:
 		return True
 
-def open_file_with_default_program(file, background=False, return_cmd=False):
+def open_file_with_default_program(file_path, background=False, return_cmd=False):
 
 	'''Opens a file with the default program for that type.
 
 	Open the file with the user's preferred application.
 
 	Args:
-		file       (str) : Path to the file to be opened.
+		file_path  (str) : Path to the file to be opened.
 		background (bool): Run the program in the background, instead of waiting for completion. Defaults to ``False``.
 		return_cmd (bool): Returns the command to run the program (str) instead of running it. Defaults to ``False``.
 
@@ -83,15 +84,15 @@ def open_file_with_default_program(file, background=False, return_cmd=False):
 	desktop_env = system.get_name()
 
 	if desktop_env == 'windows':
-		open_file_cmd = 'explorer.exe ' + "'%s'" % file
+		open_file_cmd = 'explorer.exe ' + "'%s'" % file_path
 
 	elif desktop_env == 'mac':
-		open_file_cmd = 'open ' + "'%s'" % file
+		open_file_cmd = 'open ' + "'%s'" % file_path
 
 	else:
-		file_mime_type = system.get_cmd_out(['xdg-mime', 'query', 'filetype', file])
+		file_mime_type = system.get_cmd_out(['xdg-mime', 'query', 'filetype', file_path])
 		desktop_file = system.get_cmd_out(['xdg-mime', 'query', 'default', file_mime_type])
-		open_file_cmd = desktopfile.execute(desktopfile.locate(desktop_file)[0], files=[file], return_cmd=True)
+		open_file_cmd = desktopfile.execute(desktopfile.locate(desktop_file)[0], files=[file_path], return_cmd=True)
 
 	if return_cmd:
 		return open_file_cmd

@@ -33,7 +33,7 @@ lint:
 .PHONY: doc
 doc:
 	@echo -e "$(BOLD)making html docs for $(PROJECT_NAME) $(RESET)"
-	@cd doc && $(MAKE) html && cd build/html && sh -c "pwd; python3 -m http.server $(PORT) 2>/dev/null >/dev/null & disown"
+	@cd docs && $(MAKE) html && cd _build/html && sh -c "pwd; python3 -m http.server $(PORT) 2>/dev/null >/dev/null & disown"
 	@echo -e "$(BOLD)serving html docs at port $(PORT) $(RESET)"
 
 .PHONY: test
@@ -68,8 +68,9 @@ todo:
 new-release:
 	@sed -i setup.py -e 's/_version = .*/_version = "$(NEW_VERSION)"/g'
 	@python setup.py sdist upload -r pypi
-	@sed -i doc/source/conf.py -e 's/version = .*/version = "$(NEW_VERSION)"/g'
+	@sed -i docs/source/conf.py -e 's/version = .*/version = "$(NEW_VERSION)"/g'
 	@git add .
 	@git commit
 	@git tag -a $(NEW_VERSION) -m "$(RELEASE_MESSAGE)"
 	@git push
+
