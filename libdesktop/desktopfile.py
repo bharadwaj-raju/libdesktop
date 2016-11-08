@@ -1,10 +1,28 @@
 # coding: utf-8
 
-# This file is part of libdesktop.
-# Copyright © 2016 Bharadwaj Raju <bharadwaj.raju@keemail.me>
+# This file is part of libdesktop
 
-
-# Licensed under MIT License (see included LICENSE file).
+# The MIT License (MIT)
+#
+# Copyright (c) 2016 Bharadwaj Raju
+#
+# Permission is hereby granted, free of charge, to any person obtaining a copy
+# of this software and associated documentation files (the "Software"), to deal
+# in the Software without restriction, including without limitation the rights
+# to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+# copies of the Software, and to permit persons to whom the Software is
+# furnished to do so, subject to the following conditions:
+#
+# The above copyright notice and this permission notice shall be included in all
+# copies or substantial portions of the Software.
+#
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+# FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+# AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+# LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+# OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+# SOFTWARE.
 
 import os
 import subprocess as sp
@@ -14,15 +32,12 @@ import sys
 def construct(name, exec_, terminal=False, additional_opts={}):
 
 	'''Construct a .desktop file and return it as a string.
-
 	Create a standards-compliant .desktop file, returning it as a string.
-
 	Args:
 		name            (str) : The program's name.
 		exec\_          (str) : The command.
 		terminal        (bool): Determine if program should be run in a terminal emulator or not. Defaults to ``False``.
 		additional_opts (dict): Any additional fields.
-
 	Returns:
 		str: The constructed .desktop file.
 	'''
@@ -55,15 +70,12 @@ def construct(name, exec_, terminal=False, additional_opts={}):
 def execute(desktop_file, files=None, return_cmd=False, background=False):
 
 	'''Execute a .desktop file.
-
 	Executes a given .desktop file path properly.
-
 	Args:
 		desktop_file (str) : The path to the .desktop file.
 		files        (list): Any files to be launched by the .desktop. Defaults to empty list.
 		return_cmd   (bool): Return the command (as ``str``) instead of executing. Defaults to ``False``.
 		background   (bool): Run command in background. Defaults to ``False``.
-
 	Returns:
 		str: Only if ``return_cmd``. Returns command instead of running it. Else returns nothing.
 	'''
@@ -100,16 +112,12 @@ def execute(desktop_file, files=None, return_cmd=False, background=False):
 def locate(desktop_filename_or_name):
 
 	'''Locate a .desktop from the standard locations.
-
 	Find the path to the .desktop file of a given .desktop filename or application name.
-
 	Standard locations:
 		- ``~/.local/share/applications/``
 		- ``/usr/share/applications``
-
 	Args:
 		desktop_filename_or_name (str): Either the filename of a .desktop file or the name of an application.
-
 	Returns:
 		list: A list of all matching .desktop files found.
 	'''
@@ -146,12 +154,9 @@ def locate(desktop_filename_or_name):
 def parse(desktop_file_or_string):
 
 	'''Parse a .desktop file.
-
 	Parse a .desktop file or a string with its contents into an easy-to-use dict, with standard values present even if not defined in file.
-
 	Args:
 		desktop_file_or_string (str): Either the path to a .desktop file or a string with a .desktop file as its contents.
-
 	Returns:
 		dict: A dictionary of the parsed file.'''
 

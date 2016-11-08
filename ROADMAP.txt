@@ -1,0 +1,2 @@
+- Make it feature-complete
+- Port the whole thing to C, with bindings for other languages

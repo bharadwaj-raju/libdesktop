@@ -28,6 +28,7 @@ Supports Windows (7+), OS X and Linux/Unix.
     wallpaper
     volume
     dialog
+    directories
 
     testing
 

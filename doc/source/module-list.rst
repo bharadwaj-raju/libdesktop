@@ -64,3 +64,10 @@ libdesktop.dialog
 `Documentation <dialog.html>`_
 
 Native system dialogs for files, printing etc.
+
+libdesktop.directories
+----------------------
+
+`Documentation <directories.html>`_
+
+Functions for system ans user directories.
