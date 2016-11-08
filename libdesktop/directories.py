@@ -45,11 +45,13 @@ __WINDOWS_FOLDER_GUIDS = {
 
 def __unix_get_user_dirs():
 
-	with open(os.path.join(system.get_config_dir()[0]), 'user-dirs.dirs'):
+	with open(os.path.join(system.get_config_dir()[0], 'user-dirs.dirs')) as f:
 		user_dirs = {}
 		for line in f:
 			if not line.startswith('#') and '=' in line:
-				user_dirs[line.split('=')[0]] = os.path.expanduser(line.split('=')[1])
+				user_dirs[line.split('=', 1)[0]] = os.path.expanduser(line.split('=')[1].replace('"', '').replace("'", '').replace('$HOME', '~').strip())
+
+	return user_dirs
 
 
 def __unix_get_dir(unix_dir):

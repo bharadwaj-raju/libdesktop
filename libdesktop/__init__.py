@@ -10,3 +10,4 @@ from . import applications
 from . import volume
 from . import dialog
 from . import wallpaper
+from . import directories

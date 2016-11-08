@@ -84,7 +84,8 @@ def get_wallpaper():
 
 		contents = contents[contents.index('[Containments][8][Wallpaper][org.kde.image][General]') + 1].split('=', 1)
 
-		return contents[len(contents) - 1].strip().replace('"', '').replace("'", '').replace('file://', '')
+		return contents[len(contents) - 1].strip().replace('file://', '')
+		#return contents[len(contents) - 1].strip().replace('"', '').replace("'", '').replace('file://', '')
 
 	elif desktop_env=='xfce4':
 		# XFCE4's image property is not image-path but last-image (What?)
@@ -252,7 +253,7 @@ def set_wallpaper(image):
 							d.currentConfigGroup = Array("Wallpaper",
 														"org.kde.image",
 														"General");
-							d.writeConfig("Image", "file:///%s")
+							d.writeConfig("Image", "file://%s")
 						}}'
 					''' % image], shell=True)
 

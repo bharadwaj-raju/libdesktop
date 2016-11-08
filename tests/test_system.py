@@ -31,7 +31,7 @@ def test_system_get_name():
 	else:
 		# Errr...
 		# Just call it
-		libdesktop.system.get_name()
+		print(libdesktop.system.get_name())
 
 def test_system_is_in_path():
 
@@ -61,4 +61,6 @@ def test_system_get_config_dir():
 
 	else:
 		print('Config dir for autostart:', libdesktop.system.get_config_dir('autostart'))
+
+	print('-' * 50)
 

@@ -105,7 +105,10 @@ def test_desktopfile_execute():
 	print(libdesktop.desktopfile.execute(desktop_file_for_test, return_cmd=True))
 
 	if no_gui:
+		print('-' * 50)
 		return
 
 	libdesktop.desktopfile.execute(desktop_file_for_test)
+
+	print('-' * 50)
 

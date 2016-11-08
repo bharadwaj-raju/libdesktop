@@ -1,5 +1,6 @@
 from context import libdesktop
 import os
+import time
 
 def test_wallpaper_get_wallpaper():
 
@@ -17,6 +18,8 @@ def test_wallpaper_set_wallpaper():
 
 	print('Image credit: Felipe Santana (Unsplash)')
 
+	time.sleep(3)
+
 	print('It is now:', libdesktop.wallpaper.get_wallpaper())
 
 	assert libdesktop.wallpaper.get_wallpaper() == os.path.abspath('test_desktop_bg.jpg')
@@ -24,5 +27,7 @@ def test_wallpaper_set_wallpaper():
 	print('Restoring wallpaper to original.')
 
 	libdesktop.wallpaper.set_wallpaper(original_wallpaper)
+
+	print('-' * 50)
 
 
