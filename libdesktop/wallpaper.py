@@ -77,7 +77,14 @@ def get_wallpaper():
 		return system.get_cmd_out(args).replace('file://', '')
 
 	elif desktop_env == 'kde':
-		pass  # TODO: Implement wallpaper.get() for KDE. Possibly derive from set()
+		with open(os.path.join(system.get_config_dir()[0], 'plasma-org.kde.plasma.desktop-appletsrc')) as f:
+			contents = f.read()
+
+		contents = contents.splitlines()
+
+		contents = contents[contents.index('[Containments][8][Wallpaper][org.kde.image][General]') + 1].split('=', 1)
+
+		return contents[len(contents) - 1].strip().replace('"', '').replace("'", '').replace('file://', '')
 
 	elif desktop_env=='xfce4':
 		# XFCE4's image property is not image-path but last-image (What?)
@@ -131,10 +138,27 @@ def get_wallpaper():
 						return(i.replace("'", ''))
 
 	# TODO: way to get wallpaper for desktops which are commented-out below
-	# elif desktop_env == 'icewm':
-	# 	args = ['icewmbg', image]
-	# 	sp.Popen(args)
-	#
+	elif desktop_env == 'icewm':
+		with open(os.path.expanduser('~/.icewm/preferences')) as f:
+			for line in f:
+				if line.startswith('DesktopBackgroundImage'):
+					return os.path.expanduser(line.strip().split('=', 1)[1].strip().replace('"', '').replace("'", ''))
+
+	elif desktop_env == 'awesome':
+		with open(os.path.join(system.get_config_dir('awesome'), 'rc.lua')) as f:
+			for line in f:
+				if line.startswith('theme_path'):
+					awesome_theme = line.strip().split('=', 1)
+					awesome_theme = awesome_theme[len(awesome_theme) - 1].strip().replace('"', '').replace("'", '')
+
+		with open(os.path.expanduser(awesome_theme)) as f:
+			for line in f:
+				if line.startswith('theme.wallpaper'):
+					awesome_wallpaper = line.strip().split('=', 1)
+					awesome_wallpaper = awesome_wallpaper[len(awesome_wallpaper) - 1].strip().replace('"', '').replace("'", '')
+
+					return os.path.expanduser(awesome_wallpaper)
+
 	# elif desktop_env == 'blackbox':
 	# 	args = ['bsetbg', '-full', image]
 	# 	sp.Popen(args)

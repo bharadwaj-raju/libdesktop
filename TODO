@@ -1,4 +1,3 @@
-- Implement wallpaper.get() for KDE. Possibly derive from set()
 - way to get wallpaper for desktops which are commented-out below
 - Implement volume for Windows. Looks like WinAPI is the solution...
 - Implement Win32 file dialog
