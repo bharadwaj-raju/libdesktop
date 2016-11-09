@@ -22,6 +22,7 @@ def test_applications_terminal():
 
 	print(libdesktop.applications.terminal(return_cmd=True))
 	print(libdesktop.applications.terminal(exec_='ls', return_cmd=True))
+	print(libdesktop.applications.terminal(exec_='ls', keep_open_after_cmd_exec=True, return_cmd=True))
 	print(libdesktop.applications.terminal(exec_='ls', shell_after_cmd_exec=True, return_cmd=True))
 
 	if no_gui:
