@@ -33,6 +33,7 @@ import shutil
 from libdesktop import system
 from libdesktop import desktopfile
 from libdesktop import applications
+from libdesktop import directories
 
 def add_item(name, command, system_wide=False):
 
@@ -202,7 +203,7 @@ def list_items(system_wide=False):
 		# GUI
 
 		try:
-			startup_dir = system.get_config_dir('autostart', system_wide=system_wide)[0]
+			startup_dir = directories.get_config_dir('autostart', system_wide=system_wide)[0]
 
 			for file in os.listdir(startup_dir):
 				file_parsed = desktopfile.parse(os.path.join(startup_dir, file))
@@ -253,7 +254,7 @@ def remove_item(name, system_wide=False):
 			startup_dir = os.path.join(winreg.ExpandEnvironmentStrings('%PROGRAMDATA%'), 'Microsoft\\Windows\\Start Menu\\Programs\\Startup')
 
 		else:
-			startup_dir = os.path.join(system.get_config_dir()[0], 'Roaming\\Microsoft\\Windows\\Start Menu\\Programs\\Startup')
+			startup_dir = os.path.join(directories.get_config_dir()[0], 'Roaming\\Microsoft\\Windows\\Start Menu\\Programs\\Startup')
 
 		for startup_file in os.path.listdir(start_dir):
 			if startup_file == name or startup_file.split('.')[0] == name:
@@ -290,10 +291,10 @@ def remove_item(name, system_wide=False):
 			try:
 				desktop_file_name = name + '.desktop'
 
-				startup_file = os.path.join(system.get_config_dir('autostart', system_wide=system_wide)[0], desktop_file_name)
+				startup_file = os.path.join(directories.get_config_dir('autostart', system_wide=system_wide)[0], desktop_file_name)
 
 				if not os.path.isfile(startup_file):
-					for possible_startup_file in os.listdir(system.get_config_dir('autostart', system_wide=system_wide)[0]):
+					for possible_startup_file in os.listdir(directories.get_config_dir('autostart', system_wide=system_wide)[0]):
 						possible_startup_file_parsed = desktopfile.parse(possible_startup_file)
 
 						if possible_startup_file_parsed['Name'] == name:

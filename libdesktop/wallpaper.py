@@ -13,8 +13,8 @@
 # copies of the Software, and to permit persons to whom the Software is
 # furnished to do so, subject to the following conditions:
 #
-# The above copyright notice and this permission notice shall be included in all
-# copies or substantial portions of the Software.
+# The above copyright notice and this permission notice shall be included in
+# all copies or substantial portions of the Software.
 #
 # THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 # IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
@@ -37,18 +37,20 @@ except ImportError:
 import traceback
 import ctypes
 from libdesktop import system
+from libdesktop import directories
 import tempfile
 import shutil
 import subprocess as sp
+from textwrap import dedent
+
 
 def get_wallpaper():
-
 	'''Get the desktop wallpaper.
 
 	Get the current desktop wallpaper.
 
 	Returns:
-		str: The path to the current wallpaper.
+			str: The path to the current wallpaper.
 	'''
 
 	desktop_env = system.get_name()
@@ -68,55 +70,71 @@ def get_wallpaper():
 			return gsettings.get_string(KEY).replace('file://', '')
 		except ImportError:
 			try:
-				return system.get_cmd_out(['gsettings', 'get', SCHEMA, KEY]).replace('file://', '')
+				return system.get_cmd_out(
+					['gsettings', 'get', SCHEMA, KEY]).replace('file://', '')
 			except:  # MATE < 1.6
-				return system.get_cmd_out(['mateconftool-2', '-t', 'string', '--get', '/desktop/mate/background/picture_filename']).replace('file://', '')
+				return system.get_cmd_out(
+						['mateconftool-2', '-t', 'string', '--get',
+						 '/desktop/mate/background/picture_filename']
+						).replace('file://', '')
 
 	elif desktop_env == 'gnome2':
-		args = ['gconftool-2', '-t', 'string', '--get', '/desktop/gnome/background/picture_filename']
+		args = ['gconftool-2', '-t', 'string', '--get',
+				'/desktop/gnome/background/picture_filename']
 		return system.get_cmd_out(args).replace('file://', '')
 
 	elif desktop_env == 'kde':
-		with open(os.path.join(system.get_config_dir()[0], 'plasma-org.kde.plasma.desktop-appletsrc')) as f:
+		conf_file = directories.get_config_file(
+				'plasma-org.kde.plasma.desktop-appletsrc')[0]
+		with open(conf_file) as f:
 			contents = f.read()
 
 		contents = contents.splitlines()
 
-		contents = contents[contents.index('[Containments][8][Wallpaper][org.kde.image][General]') + 1].split('=', 1)
+		contents = contents[
+			contents.index(
+			'[Containments][8][Wallpaper][org.kde.image][General]') +
+			1].split(
+			'=',
+			1
+			)
 
 		return contents[len(contents) - 1].strip().replace('file://', '')
-		#return contents[len(contents) - 1].strip().replace('"', '').replace("'", '').replace('file://', '')
 
-	elif desktop_env=='xfce4':
+	elif desktop_env == 'xfce4':
 		# XFCE4's image property is not image-path but last-image (What?)
 
-		list_of_properties = system.get_cmd_out(['xfconf-query', '-R', '-l', '-c', 'xfce4-desktop', '-p', '/backdrop'])
+		list_of_properties = system.get_cmd_out(
+			['xfconf-query', '-R', '-l', '-c', 'xfce4-desktop', '-p',
+			 '/backdrop'])
 
 		for i in list_of_properties.split('\n'):
 			if i.endswith('last-image') and 'workspace' in i:
 				# The property given is a background property
-				return system.get_cmd_out(['xfconf-query', '-c', 'xfce4-desktop', '-p', i])
+				return system.get_cmd_out(
+					['xfconf-query', '-c', 'xfce4-desktop', '-p', i])
 
-	elif desktop_env=='razor-qt':
+	elif desktop_env == 'razor-qt':
 		desktop_conf = configparser.ConfigParser()
 		# Development version
 
-		desktop_conf_file = os.path.join(get_config_dir('razor')[0], 'desktop.conf')
+		desktop_conf_file = os.path.join(
+			get_config_dir('razor')[0], 'desktop.conf')
 
 		if os.path.isfile(desktop_conf_file):
 			config_option = r'screens\1\desktops\1\wallpaper'
 
 		else:
-			desktop_conf_file = os.path.join(os.path.expanduser('~'),'.razor/desktop.conf')
+			desktop_conf_file = os.path.join(
+				os.path.expanduser('~'), '.razor/desktop.conf')
 			config_option = r'desktops\1\wallpaper'
 
 		desktop_conf.read(os.path.join(desktop_conf_file))
 		try:
-			if desktop_conf.has_option('razor', config_option):  # only replacing a value
-				return desktop_conf.get('razor',config_option)
+			if desktop_conf.has_option('razor', config_option):
+				return desktop_conf.get('razor', config_option)
 		except:
 			pass
-
 
 	elif desktop_env in ['fluxbox', 'jwm', 'openbox', 'afterstep', 'i3']:
 		# feh stores last feh command in '~/.fehbg'
@@ -143,20 +161,37 @@ def get_wallpaper():
 		with open(os.path.expanduser('~/.icewm/preferences')) as f:
 			for line in f:
 				if line.startswith('DesktopBackgroundImage'):
-					return os.path.expanduser(line.strip().split('=', 1)[1].strip().replace('"', '').replace("'", ''))
+					return os.path.expanduser(line.strip().split(
+						'=', 1)[1].strip().replace('"', '').replace("'", ''))
 
 	elif desktop_env == 'awesome':
-		with open(os.path.join(system.get_config_dir('awesome'), 'rc.lua')) as f:
+		conf_file = os.path.join(
+				directories.get_config_dir('awesome')[0],
+				'rc.lua')
+
+		with open(conf_file) as f:
 			for line in f:
 				if line.startswith('theme_path'):
 					awesome_theme = line.strip().split('=', 1)
-					awesome_theme = awesome_theme[len(awesome_theme) - 1].strip().replace('"', '').replace("'", '')
+					awesome_theme = awesome_theme[
+						len(awesome_theme) -
+						1].strip().replace(
+						'"',
+						'').replace(
+						"'",
+						'')
 
 		with open(os.path.expanduser(awesome_theme)) as f:
 			for line in f:
 				if line.startswith('theme.wallpaper'):
 					awesome_wallpaper = line.strip().split('=', 1)
-					awesome_wallpaper = awesome_wallpaper[len(awesome_wallpaper) - 1].strip().replace('"', '').replace("'", '')
+					awesome_wallpaper = awesome_wallpaper[
+						len(awesome_wallpaper) -
+						1].strip().replace(
+						'"',
+						'').replace(
+						"'",
+						'')
 
 					return os.path.expanduser(awesome_wallpaper)
 
@@ -177,35 +212,39 @@ def get_wallpaper():
 	# 	sp.Popen(args, shell=True)
 	#
 	# elif desktop_env == 'enlightenment':
-	#    args = 'enlightenment_remote -desktop-bg-add 0 0 0 0 %s' % image
-	#    sp.Popen(args, shell=True)
+	#	args = 'enlightenment_remote -desktop-bg-add 0 0 0 0 %s' % image
+	#	sp.Popen(args, shell=True)
 	#
 	# elif desktop_env == 'awesome':
 	# 	with sp.Popen("awesome-client", stdin=sp.PIPE) as awesome_client:
-	# 		command = 'local gears = require("gears"); for s = 1, screen.count() do gears.wallpaper.maximized("%s", s, true); end;' % image
+	# 		command = 'local gears = require("gears"); for s = 1, screen.count()
+	#       do gears.wallpaper.maximized("%s", s, true); end;' % image
 	# 		awesome_client.communicate(input=bytes(command, 'UTF-8'))
 
 	elif desktop_env == 'windows':
-			WINDOWS_SCRIPT = 'reg query "HKEY_CURRENT_USER\Control Panel\Desktop\Desktop"'
+		WINDOWS_SCRIPT = ('reg query "HKEY_CURRENT_USER\Control'
+						  ' Panel\Desktop\Desktop"')
 
-			return system.get_cmd_out(WINDOWS_SCRIPT)
+		return system.get_cmd_out(WINDOWS_SCRIPT)
 
 	elif desktop_env == 'mac':
 		try:
 			from appscript import app
 			app('Finder').desktop_picture.get()
 		except ImportError:
-			OSX_SCRIPT = 'tell app "finder" to get posix path of (get desktop picture as alias)'
+			OSX_SCRIPT = ('tell app "finder" to get posix path'
+						  ' of (get desktop picture as alias)')
 
 			return system.get_cmd_out(['osascript', OSX_SCRIPT])
-def set_wallpaper(image):
 
+
+def set_wallpaper(image):
 	'''Set the desktop wallpaper.
 
 	Sets the desktop wallpaper to an image.
 
 	Args:
-		image (str): The path to the image to be set as wallpaper.
+			image (str): The path to the image to be set as wallpaper.
 	'''
 
 	desktop_env = system.get_name()
@@ -229,49 +268,86 @@ def set_wallpaper(image):
 			gsettings.set_string(KEY, uri)
 		except ImportError:
 			try:
-				gsettings_proc = p.Popen(['gsettings', 'set', SCHEMA, KEY, uri])
+				gsettings_proc = sp.Popen(
+					['gsettings', 'set', SCHEMA, KEY, uri])
 			except:  # MATE < 1.6
-				sp.Popen(['mateconftool-2','-t','string','--set','/desktop/mate/background/picture_filename','%s' % image], stdout=sp.PIPE)
+				sp.Popen(['mateconftool-2',
+						  '-t',
+						  'string',
+						  '--set',
+						  '/desktop/mate/background/picture_filename',
+						  '%s' % image],
+						 stdout=sp.PIPE)
 			finally:
 				gsettings_proc.communicate()
 
 				if gsettings_proc.returncode != 0:
-					sp.Popen(['mateconftool-2','-t','string','--set','/desktop/mate/background/picture_filename','%s' % image])
+					sp.Popen(['mateconftool-2',
+							  '-t',
+							  'string',
+							  '--set',
+							  '/desktop/mate/background/picture_filename',
+							  '%s' % image])
 
 	elif desktop_env == 'gnome2':
-		args = ['gconftool-2','-t','string','--set','/desktop/gnome/background/picture_filename', '%s' % image]
-		sp.Popen(args)
+		sp.Popen(
+			['gconftool-2',
+			 '-t',
+			 'string',
+			 '--set',
+			 '/desktop/gnome/background/picture_filename',
+			 image]
+		)
 
 	elif desktop_env == 'kde':
 		# This probably only works in Plasma 5+
-		sp.Popen(['''qdbus org.kde.plasmashell /PlasmaShell org.kde.PlasmaShell.evaluateScript '
-						var allDesktops = desktops();
-						print (allDesktops);
-						for (i=0;i<allDesktops.length;i++) {{
-							d = allDesktops[i];
-							d.wallpaperPlugin = "org.kde.image";
-							d.currentConfigGroup = Array("Wallpaper",
-														"org.kde.image",
-														"General");
-							d.writeConfig("Image", "file://%s")
-						}}'
-					''' % image], shell=True)
+
+		kde_script = dedent(
+		'''\
+		var Desktops = desktops();
+		for (i=0;i<Desktops.length;i++) {{
+			d = Desktops[i];
+			d.wallpaperPlugin = "org.kde.image";
+			d.currentConfigGroup = Array("Wallpaper",
+										"org.kde.image",
+										"General");
+			d.writeConfig("Image", "file://{}")
+		}}
+		''').format(image)
+
+		sp.Popen(
+				['dbus-send',
+				 '--session',
+				 '--dest=org.kde.plasmashell',
+				 '--type=method_call',
+				 '/PlasmaShell',
+				 'org.kde.PlasmaShell.evaluateScript',
+				 'string:{}'.format(kde_script)]
+		)
 
 	elif desktop_env in ['kde3', 'trinity']:
 		args = 'dcop kdesktop KBackgroundIface setWallpaper 0 "%s" 6' % image
-		sp.Popen(args,shell=True)
+		sp.Popen(args, shell=True)
 
 	elif desktop_env == 'xfce4':
 		# XFCE4's image property is not image-path but last-image (What?)
 
-		list_of_properties = sp.check_output(['bash -c "xfconf-query -R -l -c xfce4-desktop -p /backdrop"'], shell=True)
-		list_of_properties = list_of_properties.decode('utf-8')
+		list_of_properties = system.get_cmd_out(
+				['xfconf-query',
+				 '-R',
+				 '-l',
+				 '-c',
+				 'xfce4-desktop',
+				 '-p',
+				 '/backdrop']
+		)
 
 		for i in list_of_properties.split('\n'):
 			if i.endswith('last-image'):
 				# The property given is a background property
 				sp.Popen(
-					['xfconf-query -c xfce4-desktop -p %s -s "%s"' % (i, image)],
+					['xfconf-query -c xfce4-desktop -p %s -s "%s"' %
+						(i, image)],
 					shell=True)
 
 				sp.Popen(['xfdesktop --reload'], shell=True)
@@ -280,28 +356,29 @@ def set_wallpaper(image):
 		desktop_conf = configparser.ConfigParser()
 		# Development version
 
-		desktop_conf_file = os.path.join(get_config_dir('razor')[0], 'desktop.conf')
+		desktop_conf_file = os.path.join(
+			get_config_dir('razor')[0], 'desktop.conf')
 
 		if os.path.isfile(desktop_conf_file):
 			config_option = r'screens\1\desktops\1\wallpaper'
 
 		else:
-			desktop_conf_file = os.path.join(os.path.expanduser('~'),'.razor/desktop.conf')
+			desktop_conf_file = os.path.join(
+				os.path.expanduser('~'), '.razor/desktop.conf')
 			config_option = r'desktops\1\wallpaper'
 
 		desktop_conf.read(os.path.join(desktop_conf_file))
 		try:
-			if desktop_conf.has_option('razor',config_option):  # only replacing a value
-				desktop_conf.set('razor',config_option,image)
+			if desktop_conf.has_option('razor', config_option):
+				desktop_conf.set('razor', config_option, image)
 				with codecs.open(desktop_conf_file, 'w', encoding='utf-8', errors='replace') as f:
 					desktop_conf.write(f)
 		except:
 			pass
 
-
-	elif desktop_env in ['fluxbox','jwm','openbox','afterstep', 'i3']:
+	elif desktop_env in ['fluxbox', 'jwm', 'openbox', 'afterstep', 'i3']:
 		try:
-			args = ['feh','--bg-scale', image]
+			args = ['feh', '--bg-scale', image]
 			sp.Popen(args)
 		except:
 			sys.stderr.write('Error: Failed to set wallpaper with feh!')
@@ -328,46 +405,53 @@ def set_wallpaper(image):
 		sp.Popen(args, shell=True)
 
 	elif desktop_env == 'enlightenment':
-	   args = 'enlightenment_remote -desktop-bg-add 0 0 0 0 %s' % image
-	   sp.Popen(args, shell=True)
+		args = 'enlightenment_remote -desktop-bg-add 0 0 0 0 %s' % image
+		sp.Popen(args, shell=True)
 
 	elif desktop_env == 'awesome':
 		with sp.Popen("awesome-client", stdin=sp.PIPE) as awesome_client:
-			command = 'local gears = require("gears"); for s = 1, screen.count() do gears.wallpaper.maximized("%s", s, true); end;' % image
+			command = ('local gears = require("gears"); for s = 1,'
+						' screen.count() do gears.wallpaper.maximized'
+						'("%s", s, true); end;') % image
 			awesome_client.communicate(input=bytes(command, 'UTF-8'))
 
 	elif desktop_env == 'windows':
-			WINDOWS_SCRIPT = '''reg add "HKEY_CURRENT_USER\Control Panel\Desktop" /v Wallpaper /t REG_SZ /d  %s /f
+		WINDOWS_SCRIPT = dedent('''
+			reg add "HKEY_CURRENT_USER\Control Panel\Desktop" \
+			/v Wallpaper /t REG_SZ /d  %s /f
 
-rundll32.exe user32.dll,UpdatePerUserSystemParameters
-''' % image
+			rundll32.exe user32.dll,UpdatePerUserSystemParameters
+			''') % image
 
-			windows_script_file = os.path.join(tempfile.gettempdir(), 'wallscript.bat')
+		windows_script_file = os.path.join(
+			tempfile.gettempdir(), 'wallscript.bat')
 
-			with open(windows_script_file, 'w') as f:
-				f.write(WINDOWS_SCRIPT)
+		with open(windows_script_file, 'w') as f:
+			f.write(WINDOWS_SCRIPT)
 
-			sp.Popen([windows_script_file], shell=True)
+		sp.Popen([windows_script_file], shell=True)
 
-			# Sometimes the method above works
-			# and sometimes the one below
+		# Sometimes the method above works
+		# and sometimes the one below
 
-			SPI_SETDESKWALLPAPER = 20
-			ctypes.windll.user32.SystemParametersInfoA(SPI_SETDESKWALLPAPER, 0, image , 0)
+		SPI_SETDESKWALLPAPER = 20
+		ctypes.windll.user32.SystemParametersInfoA(
+			SPI_SETDESKWALLPAPER, 0, image, 0)
 
 	elif desktop_env == 'mac':
 		try:
 			from appscript import app, mactypes
 			app('Finder').desktop_picture.set(mactypes.File(image))
 		except ImportError:
-			OSX_SCRIPT = '''tell application "System Events"
-                                   set desktopCount to count of desktops
-                                     repeat with desktopNumber from 1 to desktopCount
-                                       tell desktop desktopNumber
-                                         set picture to POSIX file "%s"
-                                       end tell
-                                     end repeat
-                                 end tell''' % image
+			OSX_SCRIPT = dedent(
+				'''tell application "System Events"
+					   set desktopCount to count of desktops
+							 repeat with desktopNumber from 1 to desktopCount
+							   tell desktop desktopNumber
+								 set picture to POSIX file "%s"
+							   end tell
+							 end repeat
+				 end tell''') % image
 
 			sp.Popen(['osascript', OSX_SCRIPT])
 	else:

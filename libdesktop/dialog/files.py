@@ -29,8 +29,9 @@ from libdesktop import system
 import sys
 import os
 
-def open_file(default_dir='~', extensions=None, title='Choose a file', multiple_files=False, directory=False):
 
+def open_file(default_dir='~', extensions=None,
+			  title='Choose a file', multiple_files=False, directory=False):
 	'''Start the native file dialog for opening file(s).
 
 	Starts the system native file dialog in order to open a file (or multiple files).
@@ -38,15 +39,15 @@ def open_file(default_dir='~', extensions=None, title='Choose a file', multiple_
 	The toolkit used for each platform:
 
 	+-------------------------------------+------------------------------+
-	| Windows                             | Windows API (Win32)          |
+	| Windows							 | Windows API (Win32)		  |
 	+-------------------------------------+------------------------------+
-	| Mac OS X                            | Cocoa                        |
+	| Mac OS X							| Cocoa						|
 	+-------------------------------------+------------------------------+
-	| GNOME, Unity, Cinnamon, Pantheon    | GTK+ 3                       |
+	| GNOME, Unity, Cinnamon, Pantheon	| GTK+ 3					   |
 	+-------------------------------------+------------------------------+
-	| KDE, LXQt                           | Qt 5 (fallback: Qt 4/GTK+ 3) |
+	| KDE, LXQt						   | Qt 5 (fallback: Qt 4/GTK+ 3) |
 	+-------------------------------------+------------------------------+
-	| Other desktops (Xfce, WMs etc)      | GTK+ 2 (fallback: GTK+ 3)    |
+	| Other desktops (Xfce, WMs etc)	  | GTK+ 2 (fallback: GTK+ 3)	|
 	+-------------------------------------+------------------------------+
 
 	**Note on Dependencies**
@@ -57,21 +58,21 @@ def open_file(default_dir='~', extensions=None, title='Choose a file', multiple_
 	It depends on `PyGTK <https://pygtk.org>`_ for other desktops (not usually installed, so has a GTK+ 3 fallback).
 
 	Args:
-		default_dir (str)   : The directory to start the dialog in. Default: User home directory.
-		extensions  (dict)  : The extensions to filter by. Format:
+			default_dir (str)   : The directory to start the dialog in. Default: User home directory.
+			extensions  (dict)  : The extensions to filter by. Format:
 
-							.. code-block:: python
+													.. code-block:: python
 
-								{
-								  'Filter Name (example: Image Files)': ['*.png', '*.whatever', '*']
-								}
+															{
+															  'Filter Name (example: Image Files)': ['*.png', '*.whatever', '*']
+															}
 
-		title          (str) : The title of the dialog. Default: `Choose a file`
-		multiple_files (bool): Whether to choose multiple files or single files only. Default: `False`
-		directory      (bool): Whether to choose directories. Default: `False`
+			title		  (str) : The title of the dialog. Default: `Choose a file`
+			multiple_files (bool): Whether to choose multiple files or single files only. Default: `False`
+			directory	  (bool): Whether to choose directories. Default: `False`
 
 	Returns:
-		list: `list` of `str` s (each `str` being a selected file). If nothing is selected/dialog is cancelled, it is `None`.
+			list: `list` of `str` s (each `str` being a selected file). If nothing is selected/dialog is cancelled, it is `None`.
 	'''
 
 	default_dir = os.path.expanduser(default_dir)
@@ -105,9 +106,12 @@ def open_file(default_dir='~', extensions=None, title='Choose a file', multiple_
 					Gtk.Window.__init__(self, title='')
 
 					dialog = Gtk.FileChooserDialog(title, None,
-						Gtk.FileChooserAction.OPEN,
-						(Gtk.STOCK_CANCEL, Gtk.ResponseType.CANCEL,
-						Gtk.STOCK_OPEN, Gtk.ResponseType.OK))
+												   Gtk.FileChooserAction.OPEN,
+												   (Gtk.STOCK_CANCEL,
+													Gtk.ResponseType.CANCEL,
+													Gtk.STOCK_OPEN,
+													Gtk.ResponseType.OK)
+												   )
 
 					if extensions:
 						for entry in extensions:
@@ -142,7 +146,6 @@ def open_file(default_dir='~', extensions=None, title='Choose a file', multiple_
 
 			return win.path
 
-
 		def qt5_dialog():
 
 			# Qt 5
@@ -164,8 +167,10 @@ def open_file(default_dir='~', extensions=None, title='Choose a file', multiple_
 					if extensions:
 						for entry in extensions:
 							# entry → Filter name (i.e. 'Image Files' etc)
-							# value → Filter expression (i.e. '*.png, *.jpg' etc)
-							extensions_string += '%s (%s);;' % (entry, ' '.join(extensions[entry]))
+							# value → Filter expression (i.e. '*.png, *.jpg'
+							# etc)
+							extensions_string += '%s (%s);;' % (entry,
+																' '.join(extensions[entry]))
 
 					else:
 						extensions_string = 'All Files (*)'
@@ -202,7 +207,6 @@ def open_file(default_dir='~', extensions=None, title='Choose a file', multiple_
 
 			app.exec_()
 
-
 		def gtk2_dialog():
 
 			# GTK+ 2
@@ -211,9 +215,9 @@ def open_file(default_dir='~', extensions=None, title='Choose a file', multiple_
 			pygtk.require('2.0')
 
 			dialog = gtk.FileChooserDialog(title, None,
-                        gtk.FILE_CHOOSER_ACTION_OPEN,
-						(gtk.STOCK_CANCEL, gtk.RESPONSE_CANCEL,
-						gtk.STOCK_OPEN, gtk.RESPONSE_OK))
+										   gtk.FILE_CHOOSER_ACTION_OPEN,
+										   (gtk.STOCK_CANCEL, gtk.RESPONSE_CANCEL,
+											gtk.STOCK_OPEN, gtk.RESPONSE_OK))
 
 			dialog.set_default_response(gtk.RESPONSE_OK)
 
@@ -239,7 +243,6 @@ def open_file(default_dir='~', extensions=None, title='Choose a file', multiple_
 
 			dialog.destroy()
 
-
 		if system.get_name() in ['gnome', 'unity', 'cinnamon', 'pantheon']:
 			return gtk3_dialog()
 
@@ -256,5 +259,3 @@ def open_file(default_dir='~', extensions=None, title='Choose a file', multiple_
 
 			except ImportError:
 				return gtk3_dialog()
-
-

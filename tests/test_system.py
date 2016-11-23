@@ -49,18 +49,3 @@ def test_system_is_running():
 	else:
 		assert libdesktop.system.is_running(sys.executable) is True
 
-def test_system_get_config_dir():
-
-	print('Config dirs:', libdesktop.system.get_config_dir())
-
-	if os.name == 'nt':
-		print('Config dir for Microsoft:', libdesktop.system.get_config_dir('Microsoft'))
-
-	elif os.name == 'darwin':
-		print('Config dir for Finder:', libdesktop.system.get_config_dir('Finder'))
-
-	else:
-		print('Config dir for autostart:', libdesktop.system.get_config_dir('autostart'))
-
-	print('-' * 50)
-

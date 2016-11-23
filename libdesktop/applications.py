@@ -13,8 +13,8 @@
 # copies of the Software, and to permit persons to whom the Software is
 # furnished to do so, subject to the following conditions:
 #
-# The above copyright notice and this permission notice shall be included in all
-# copies or substantial portions of the Software.
+# The above copyright notice and this permission notice shall be included in
+# all copies or substantial portions of the Software.
 #
 # THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 # IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
@@ -33,17 +33,17 @@ import shlex
 from libdesktop import desktopfile
 from libdesktop import system
 
-def mac_app_exists(app):
 
+def mac_app_exists(app):
 	'''Check if 'app' is installed (OS X).
 
 	Check if the given applications is installed on this OS X system.
 
 	Args:
-		app (str): The application name.
+			app (str): The application name.
 
 	Returns:
-		bool: Is the app installed or not?
+			bool: Is the app installed or not?
 	'''
 
 	APP_CHECK_APPLESCRIPT = '''try
@@ -58,7 +58,8 @@ def mac_app_exists(app):
 	with open('/tmp/app_check.AppleScript', 'w') as f:
 		f.write(APP_CHECK_APPLESCRIPT % app)
 
-	app_check_proc = sp.Popen(['osascript', '-e', '/tmp/app_check.AppleScript'])
+	app_check_proc = sp.Popen(
+		['osascript', '-e', '/tmp/app_check.AppleScript'])
 
 	if app_check_proc.wait() != 0:
 		return False
@@ -66,19 +67,20 @@ def mac_app_exists(app):
 	else:
 		return True
 
-def open_file_with_default_program(file_path, background=False, return_cmd=False):
 
+def open_file_with_default_program(file_path,
+								   background=False, return_cmd=False):
 	'''Opens a file with the default program for that type.
 
 	Open the file with the user's preferred application.
 
 	Args:
-		file_path  (str) : Path to the file to be opened.
-		background (bool): Run the program in the background, instead of waiting for completion. Defaults to ``False``.
-		return_cmd (bool): Returns the command to run the program (str) instead of running it. Defaults to ``False``.
+			file_path  (str) : Path to the file to be opened.
+			background (bool): Run the program in the background, instead of waiting for completion. Defaults to ``False``.
+			return_cmd (bool): Returns the command to run the program (str) instead of running it. Defaults to ``False``.
 
 	Returns:
-		str: Only if ``return_cmd``, the command to run the program is returned instead of running it. Else returns nothing.
+			str: Only if ``return_cmd``, the command to run the program is returned instead of running it. Else returns nothing.
 	'''
 
 	desktop_env = system.get_name()
@@ -90,9 +92,12 @@ def open_file_with_default_program(file_path, background=False, return_cmd=False
 		open_file_cmd = 'open ' + "'%s'" % file_path
 
 	else:
-		file_mime_type = system.get_cmd_out(['xdg-mime', 'query', 'filetype', file_path])
-		desktop_file = system.get_cmd_out(['xdg-mime', 'query', 'default', file_mime_type])
-		open_file_cmd = desktopfile.execute(desktopfile.locate(desktop_file)[0], files=[file_path], return_cmd=True)
+		file_mime_type = system.get_cmd_out(
+			['xdg-mime', 'query', 'filetype', file_path])
+		desktop_file = system.get_cmd_out(
+			['xdg-mime', 'query', 'default', file_mime_type])
+		open_file_cmd = desktopfile.execute(desktopfile.locate(
+			desktop_file)[0], files=[file_path], return_cmd=True)
 
 	if return_cmd:
 		return open_file_cmd
@@ -103,37 +108,38 @@ def open_file_with_default_program(file_path, background=False, return_cmd=False
 		if not background:
 			def_program_proc.wait()
 
-def terminal(exec_='', background=False, shell_after_cmd_exec=False, keep_open_after_cmd_exec=False, return_cmd=False):
 
+def terminal(exec_='', background=False, shell_after_cmd_exec=False,
+			 keep_open_after_cmd_exec=False, return_cmd=False):
 	'''Start the default terminal emulator.
 
 	Start the user's preferred terminal emulator, optionally running a command in it.
 
 	**Order of starting**
-		Windows:
-			Powershell
+			Windows:
+					Powershell
 
-		Mac:
-			- iTerm2
-			- Terminal.app
+			Mac:
+					- iTerm2
+					- Terminal.app
 
-		Linux/Unix:
-			- ``$TERMINAL``
-			- ``x-terminal-emulator``
-			- Terminator
-			- Desktop environment's terminal
-			- gnome-terminal
-			- urxvt
-			- rxvt
-			- xterm
+			Linux/Unix:
+					- ``$TERMINAL``
+					- ``x-terminal-emulator``
+					- Terminator
+					- Desktop environment's terminal
+					- gnome-terminal
+					- urxvt
+					- rxvt
+					- xterm
 
 	Args:
-		exec\_               (str) : An optional command to run in the opened terminal emulator. Defaults to empty (no command).
-		background           (bool): Run the terminal in the background, instead of waiting for completion. Defaults to ``False``.
-		shell_after_cmd_exec (bool): Start the user's shell after running the command (see exec_). Defaults to `False`.
-		return_cmd           (bool): Returns the command used to start the terminal (str) instead of running it. Defaults to ``False``.
+			exec\_			   (str) : An optional command to run in the opened terminal emulator. Defaults to empty (no command).
+			background		   (bool): Run the terminal in the background, instead of waiting for completion. Defaults to ``False``.
+			shell_after_cmd_exec (bool): Start the user's shell after running the command (see exec_). Defaults to `False`.
+			return_cmd		   (bool): Returns the command used to start the terminal (str) instead of running it. Defaults to ``False``.
 	Returns:
-		str: Only if ``return_cmd``, returns the command to run the terminal instead of running it. Else returns nothing.
+			str: Only if ``return_cmd``, returns the command to run the terminal instead of running it. Else returns nothing.
 	'''
 
 	desktop_env = system.get_name()
@@ -234,7 +240,8 @@ def terminal(exec_='', background=False, shell_after_cmd_exec=False, keep_open_a
 				terminal_cmd_str += ' sh -c {}'.format(shlex.quote(exec_))
 
 			else:
-				terminal_cmd_str += ' -e {}'.format(shlex.quote('sh -c {}'.format(shlex.quote(exec_))))
+				terminal_cmd_str += ' -e {}'.format(
+					shlex.quote('sh -c {}'.format(shlex.quote(exec_))))
 
 	if return_cmd:
 		return terminal_cmd_str
@@ -245,32 +252,41 @@ def terminal(exec_='', background=False, shell_after_cmd_exec=False, keep_open_a
 		# Wait for process to complete
 		terminal_proc.wait()
 
-def text_editor(file='', background=False, return_cmd=False):
 
+def text_editor(file='', background=False, return_cmd=False):
 	'''Starts the default graphical text editor.
 
 	Start the user's preferred graphical text editor, optionally with a file.
 
 	Args:
-		file       (str) : The file to be opened with the editor. Defaults to an empty string (i.e. no file).
-		background (bool): Runs the editor in the background, instead of waiting for completion. Defaults to ``False``.
-		return_cmd (bool): Returns the command (str) to run the editor instead of running it. Defaults to ``False``.
+			file	   (str) : The file to be opened with the editor. Defaults to an empty string (i.e. no file).
+			background (bool): Runs the editor in the background, instead of waiting for completion. Defaults to ``False``.
+			return_cmd (bool): Returns the command (str) to run the editor instead of running it. Defaults to ``False``.
 
 	Returns:
-		str: Only if ``return_cmd``, the command to run the editor is returned. Else returns nothing.
+			str: Only if ``return_cmd``, the command to run the editor is returned. Else returns nothing.
 	'''
 
 	desktop_env = system.get_name()
 
 	if desktop_env == 'windows':
-		editor_cmd_str = system.get_cmd_out(['ftype', 'textfile']).split('=', 1)[1]
+		editor_cmd_str = system.get_cmd_out(
+			['ftype', 'textfile']).split('=', 1)[1]
 
 	elif desktop_env == 'mac':
-		editor_cmd_str = 'open -a' + system.get_cmd_out(['def', 'read', 'com.apple.LaunchServices', 'LSHandlers' '-array' '{LSHandlerContentType=public.plain-text;}'])
+		editor_cmd_str = 'open -a' + system.get_cmd_out(
+				['def',
+				 'read',
+				 'com.apple.LaunchServices',
+				 'LSHandlers'
+				 '-array'
+				 '{LSHandlerContentType=public.plain-text;}']
+				)
 
 	else:
 		# Use def handler for MIME-type text/plain
-		editor_cmd_str = system.get_cmd_out(['xdg-mime', 'query', 'default', 'text/plain'])
+		editor_cmd_str = system.get_cmd_out(
+			['xdg-mime', 'query', 'default', 'text/plain'])
 
 		if '\n' in editor_cmd_str:
 			# Sometimes locate returns multiple results
@@ -279,9 +295,11 @@ def text_editor(file='', background=False, return_cmd=False):
 			editor_cmd_str = editor_cmd_str.split('\n')[0]
 
 	if editor_cmd_str.endswith('.desktop'):
-		# We don't use desktopfile.execute() in order to have working return_cmd and background
+		# We don't use desktopfile.execute() in order to have working
+		# return_cmd and background
 
-		editor_cmd_str = desktopfile.parse(desktopfile.locate(editor_cmd_str)[0])['Exec']
+		editor_cmd_str = desktopfile.parse(
+			desktopfile.locate(editor_cmd_str)[0])['Exec']
 
 		for i in editor_cmd_str.split():
 			if i.startswith('%'):
